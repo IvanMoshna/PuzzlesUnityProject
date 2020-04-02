@@ -9,6 +9,7 @@
         <e p="_Project" t="Include">
           <e p="Scripts" t="Include">
             <e p="PuzzleScript.cs" t="Include" />
+            <e p="ScrollSnapRect.cs" t="Include" />
           </e>
         </e>
       </e>

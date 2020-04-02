@@ -16,11 +16,12 @@ public class PuzzleScript : MonoBehaviour
     public int columns;
     public int lines;
     public float smooth; //сглаживание всех пазлов во время соединения
+    public GameObject tookenPuzzle;
 
 
     private int puzzleCounter;
     private int sortingOrder;
-    private List<SpriteRenderer> puzzle = new List<SpriteRenderer>();
+    public List<SpriteRenderer> puzzle = new List<SpriteRenderer>();
     private List<Vector3> puzzlePos = new List<Vector3>();
     private Transform current;
     private Vector3 offset;
@@ -32,6 +33,7 @@ public class PuzzleScript : MonoBehaviour
 	    puzzleBW.gameObject.SetActive(false);
         Clear();
         StartCoroutine(Generate());
+       
     }
     void Clear()
     {
@@ -70,6 +72,8 @@ public class PuzzleScript : MonoBehaviour
 
 	    yield return new WaitForEndOfFrame();
 
+
+	    float distance = 0f;
 	    for (int y = 0; y < lines; y++)
 	    {
 		    for (int x = 0; x < columns; x++)
@@ -85,7 +89,8 @@ public class PuzzleScript : MonoBehaviour
 			    // создание нового объекта и настройка его позиции
 			    GameObject obj = new GameObject("Puzzle: " + puzzleCounter);
 			    obj.transform.parent = transform;
-			    position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f/*puzzleCounter / 100f*/);
+			    //position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f /*+ distance*//*puzzleCounter / 100f*/);
+			    position = new Vector3(0,distance,0);
 			    obj.transform.localPosition = position;
 
 			    // конвертируем текстуру в спрайт
@@ -94,6 +99,7 @@ public class PuzzleScript : MonoBehaviour
 			                                (Camera.main.orthographicSize *
 			                                 2f)); // формула расчета размера спрайта (только для режима камеры Оrthographic)
 			    ren.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), unit);
+			    ren.sortingOrder = 1;
 			    obj.AddComponent<BoxCollider2D>();
 			    obj.tag = puzzleTag;
 				
@@ -101,26 +107,31 @@ public class PuzzleScript : MonoBehaviour
 			    puzzlePos.Add(position);
 			    puzzle.Add(ren);
 			    puzzleCounter++;
+			    distance += 100f;
 		    }
+
+		    
 	    }
 
-	    /*foreach (SpriteRenderer p in puzzle)
-	    {
-		    var content = scrollView.GetComponent<ScrollView>().contentViewport;
-		    content.Add(p);
-	    }*/
-	    
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
+	    //SetPosition();
+	    int g = 0;
+	    Debug.Log("SetPos: " + g++);
     }
+
 
     private void Start()
     {
 	    NewGame();
 	    Debug.Log("NewGame!");
+	    Transform sPos =new RectTransform();
+
     }
     void GetPuzzle()
     {
+	    Debug.Log("GET PUZZLE");
+	    
 	    // массив рейкаста, чтобы фильтровать спрайты по глубине Z (тот что ближе, будет первым элементом массива)
 	    RaycastHit2D[] hit = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 	    if(hit.Length > 0 && hit[0].transform.tag == puzzleTag)
@@ -129,6 +140,8 @@ public class PuzzleScript : MonoBehaviour
 		    current = hit[0].transform;
 		    sortingOrder = current.GetComponent<SpriteRenderer>().sortingOrder;
 		    current.GetComponent<SpriteRenderer>().sortingOrder = puzzleCounter + 1;
+		    Debug.Log("currentName = " + current.name);
+		    current.SetParent(tookenPuzzle.transform);
 	    }
     }
     
@@ -139,11 +152,28 @@ public class PuzzleScript : MonoBehaviour
 	    {
 		    if(Vector3.Distance(puzzle[j].transform.position, puzzlePos[j]) < distance)
 		    {
+			    Debug.Log("Puzzle position: " + puzzle[j].transform.position);
+			    Debug.Log("PuzzlePos position: " + puzzlePos[j]);
 			    i++;
 		    }
 	    }
 	    return i;
     }
+
+    void SetPosition()
+    {
+	    float distance = 0f;
+
+	    foreach(SpriteRenderer p in puzzle)
+	    {
+		    p.transform.position = new Vector3(0,distance , 0);
+		    distance += 10f;
+		    Debug.Log("distance = " + distance);
+		    Debug.Log("puzzleName = " + p.name);
+
+	    }
+    }
+    
     void Update()
     {
 	    if(isWin)
@@ -166,6 +196,7 @@ public class PuzzleScript : MonoBehaviour
 		    if(Input.GetMouseButtonDown(0))
 		    {
 			    GetPuzzle();
+			    
 		    }
 		    else if(Input.GetMouseButtonUp(0) && current)
 		    {
