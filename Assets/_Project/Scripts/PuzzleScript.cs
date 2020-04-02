@@ -89,9 +89,13 @@ public class PuzzleScript : MonoBehaviour
 			    // создание нового объекта и настройка его позиции
 			    GameObject obj = new GameObject("Puzzle: " + puzzleCounter);
 			    obj.transform.parent = transform;
-			    //position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f /*+ distance*//*puzzleCounter / 100f*/);
-			    position = new Vector3(0,distance,0);
+			    position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f, 0);
+			    puzzlePos.Add(position);
+			    Debug.Log("puzzlePos " + position);
+			    position = new Vector3(0,distance, 0);
 			    obj.transform.localPosition = position;
+			    //obj.transform.position = position;
+			    Debug.Log("localPosition" + obj.transform.position);
 
 			    // конвертируем текстуру в спрайт
 			    SpriteRenderer ren = obj.AddComponent<SpriteRenderer>();
@@ -104,20 +108,24 @@ public class PuzzleScript : MonoBehaviour
 			    obj.tag = puzzleTag;
 				
 			    
-			    puzzlePos.Add(position);
+			   
 			    puzzle.Add(ren);
 			    puzzleCounter++;
 			    distance += 100f;
 		    }
 
-		    
+		   
 	    }
 
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
-	    //SetPosition();
 	    int g = 0;
 	    Debug.Log("SetPos: " + g++);
+	    
+	    for (int k = 0; k < puzzlePos.Count; k++)
+	    {
+		    //Debug.Log("puzzlePoz: " + puzzlePos[k]);
+	    }
     }
 
 
@@ -125,13 +133,10 @@ public class PuzzleScript : MonoBehaviour
     {
 	    NewGame();
 	    Debug.Log("NewGame!");
-	    Transform sPos =new RectTransform();
 
     }
     void GetPuzzle()
     {
-	    Debug.Log("GET PUZZLE");
-	    
 	    // массив рейкаста, чтобы фильтровать спрайты по глубине Z (тот что ближе, будет первым элементом массива)
 	    RaycastHit2D[] hit = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 	    if(hit.Length > 0 && hit[0].transform.tag == puzzleTag)
@@ -140,8 +145,9 @@ public class PuzzleScript : MonoBehaviour
 		    current = hit[0].transform;
 		    sortingOrder = current.GetComponent<SpriteRenderer>().sortingOrder;
 		    current.GetComponent<SpriteRenderer>().sortingOrder = puzzleCounter + 1;
-		    Debug.Log("currentName = " + current.name);
-		    current.SetParent(tookenPuzzle.transform);
+		    //Debug.Log("currentName = " + current.name);
+		    current.SetParent(tookenPuzzle.transform);//чтобы потом не скролилось все
+		    Debug.Log("position " + current.transform.position);
 	    }
     }
     
@@ -155,6 +161,7 @@ public class PuzzleScript : MonoBehaviour
 			    Debug.Log("Puzzle position: " + puzzle[j].transform.position);
 			    Debug.Log("PuzzlePos position: " + puzzlePos[j]);
 			    i++;
+			    puzzle[j].GetComponent<BoxCollider2D>().enabled = false;
 		    }
 	    }
 	    return i;
@@ -178,7 +185,7 @@ public class PuzzleScript : MonoBehaviour
     {
 	    if(isWin)
 	    {
-		    if(CheckPuzzle(0.1f) == puzzle.Count)
+		    if(CheckPuzzle(0.5f) == puzzle.Count)
 		    {
 			    Clear();
 			    originalPuzzle.gameObject.SetActive(true);
