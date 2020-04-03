@@ -92,7 +92,8 @@ public class PuzzleScript : MonoBehaviour
 			    position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f, 0);
 			    puzzlePos.Add(position);
 			    Debug.Log("puzzlePos " + position);
-			    position = new Vector3(0,distance, 0);
+			    
+			    position = new Vector3( distance,0, 0);
 			    obj.transform.localPosition = position;
 			    //obj.transform.position = position;
 			    Debug.Log("localPosition" + obj.transform.position);
@@ -156,7 +157,7 @@ public class PuzzleScript : MonoBehaviour
 	    int i = 0;
 	    for(int j = 0; j < puzzle.Count; j++)
 	    {
-		    if(Vector3.Distance(puzzle[j].transform.position, puzzlePos[j]) < distance)
+		    if(Vector2.Distance(puzzle[j].transform.position, puzzlePos[j]) < distance)
 		    {
 			    Debug.Log("Puzzle position: " + puzzle[j].transform.position);
 			    Debug.Log("PuzzlePos position: " + puzzlePos[j]);
