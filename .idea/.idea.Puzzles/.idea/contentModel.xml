@@ -9,6 +9,7 @@
       <e p="Assets" t="Include">
         <e p="_Project" t="Include">
           <e p="Scripts" t="Include">
+            <e p="Puzzle.cs" t="Include" />
             <e p="PuzzleController.cs" t="Include" />
             <e p="Settings" t="Include">
               <e p="SettingsGame.cs" t="Include" />

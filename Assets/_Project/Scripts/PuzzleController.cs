@@ -8,6 +8,7 @@ using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Image = UnityEngine.UI.Image;
 
 public class PuzzleController : MonoBehaviour
 {
@@ -20,9 +21,14 @@ public class PuzzleController : MonoBehaviour
     public int lines;*/
     public float smooth; //сглаживание всех пазлов во время соединения
     //public float puzzleDistance;
-    public GameObject tookenPuzzle;
-    public ScrollRect scrollRect;
+    public GameObject checkedPuzzles;
+    public ScrollView scrollView;
 
+    //public List<Puzzle> Puzzles = new List<Puzzle>();
+
+    public List<GameObject> puzzlePrefabs = new List<GameObject>();
+
+    public GameObject puzzlePrefab;
 
     private int puzzleCounter;
     private int sortingOrder;
@@ -33,9 +39,7 @@ public class PuzzleController : MonoBehaviour
     private bool isWin;
     private Vector3 scrollPosition;
 
-    private SettingsGame gameSettings;
-
-    //public SnapScrollingScript snapScrolling;
+    public SettingsGame gameSettings;
 
     void NewGame()
     {
@@ -43,7 +47,7 @@ public class PuzzleController : MonoBehaviour
 	    puzzleBW.gameObject.SetActive(false);
         Clear();
 	    StartCoroutine(Generate());
-	   
+
     }
     void Clear()
     {
@@ -98,15 +102,18 @@ public class PuzzleController : MonoBehaviour
 
 			    // создание нового объекта и настройка его позиции
 			    GameObject obj = new GameObject("Puzzle: " + puzzleCounter);
-			    obj.transform.parent = transform;
+			    //obj.transform.parent = transform;
 			    position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f, 0);
 			    puzzlePos.Add(position);
-			    Debug.Log("puzzlePos " + position);
+			    //Debug.Log("puzzlePos " + position);
+
 			    
-			    position = new Vector3(  distance,0, 0);
-			    obj.transform.localPosition = position;
+
+			    Vector2 positionForScroll = new Vector3(  distance,0, 0);
+			    //obj.transform.localPosition = positionForScroll;
+			   
 			    //obj.transform.position = position;
-			    Debug.Log("localPosition" + obj.transform.position);
+			    //Debug.Log("localPosition" + obj.transform.position);
 
 			    // конвертируем текстуру в спрайт
 			    SpriteRenderer ren = obj.AddComponent<SpriteRenderer>();
@@ -115,11 +122,24 @@ public class PuzzleController : MonoBehaviour
 			                                 2f)); // формула расчета размера спрайта (только для режима камеры Оrthographic)
 			    ren.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), unit);
 			    ren.sortingOrder = 1;
-			    obj.AddComponent<BoxCollider2D>();
-			    obj.tag = puzzleTag;
-				
+			    //obj.AddComponent<BoxCollider2D>();
+			   //obj.tag = puzzleTag;
 			    
+			   Destroy(obj);
 			   
+			    GameObject instPuzzle = Instantiate(puzzlePrefab, transform, false);
+			    instPuzzle.transform.localPosition = positionForScroll;
+			    instPuzzle.GetComponent<Image>().sprite = ren.sprite;
+			    instPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
+
+			    Puzzle instPiece = instPuzzle.GetComponent<Puzzle>();
+			    instPiece.scrollView = scrollView;
+			    instPiece.puzzleController = this;
+			    instPiece.puzzlePos = position;
+			    instPiece.startPos = positionForScroll;
+			    
+			    puzzlePrefabs.Add(instPuzzle);
+
 			    puzzle.Add(ren);
 			    puzzleCounter++;
 			    distance += 200f;
@@ -129,8 +149,6 @@ public class PuzzleController : MonoBehaviour
 
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
-	    int g = 0;
-	    Debug.Log("SetPos: " + g++);
     }
 
 
@@ -143,8 +161,7 @@ public class PuzzleController : MonoBehaviour
     }
     void GetPuzzle()
     {
-	   
-	    Debug.Log("SCROLL POSITION: " + scrollPosition);
+
 	    // массив рейкаста, чтобы фильтровать спрайты по глубине Z (тот что ближе, будет первым элементом массива)
 	    RaycastHit2D[] hit = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 	    if(hit.Length > 0 && hit[0].transform.tag == puzzleTag)
@@ -155,8 +172,9 @@ public class PuzzleController : MonoBehaviour
 		    current.GetComponent<SpriteRenderer>().sortingOrder = puzzleCounter + 1;
 		    //Debug.Log("currentName = " + current.name);
 		    //current.SetParent(tookenPuzzle.transform);//чтобы потом не скролилось все
-		    Debug.Log("position " + current.transform.position);
+		    //Debug.Log("position " + current.transform.position);
 		    scrollPosition = current.transform.position;
+		    //Debug.Log("SCROLL POSITION: " + scrollPosition);
 	    }
     }
     
@@ -167,8 +185,8 @@ public class PuzzleController : MonoBehaviour
 	    {
 		    if(Vector2.Distance(puzzle[j].transform.position, puzzlePos[j]) < distance)
 		    {
-			    Debug.Log("Puzzle position: " + puzzle[j].transform.position);
-			    Debug.Log("PuzzlePos position: " + puzzlePos[j]);
+			    /*Debug.Log("Puzzle position: " + puzzle[j].transform.position);
+			    Debug.Log("PuzzlePos position: " + puzzlePos[j]);*/
 			    i++;
 			    puzzle[j].GetComponent<BoxCollider2D>().enabled = false;
 		    }
@@ -177,7 +195,7 @@ public class PuzzleController : MonoBehaviour
 	    return i;
     }
 
-    void SetPosition()
+    /*void SetPosition()
     {
 	    float distance = 0f;
 
@@ -185,11 +203,11 @@ public class PuzzleController : MonoBehaviour
 	    {
 		    p.transform.position = new Vector3(0,distance , 0);
 		    distance += 10f;
-		    Debug.Log("distance = " + distance);
-		    Debug.Log("puzzleName = " + p.name);
+		    /*Debug.Log("distance = " + distance);
+		    Debug.Log("puzzleName = " + p.name);#1#
 
 	    }
-    }
+    }*/
     
     void Update()
     {
@@ -205,7 +223,7 @@ public class PuzzleController : MonoBehaviour
 			    for(int j = 0; j < puzzle.Count; j++)
 			    {
 				    puzzle[j].transform.position = Vector3.Lerp(puzzle[j].transform.position, puzzlePos[j], smooth * Time.deltaTime);
-				    Debug.Log("ХУЙ!");
+				    //Debug.Log("ХУЙ!");
 			    }
 		    }
 	    }
@@ -214,10 +232,10 @@ public class PuzzleController : MonoBehaviour
 		    if(Input.GetMouseButtonDown(0))
 		    {
 			    GetPuzzle();
-			    scrollRect.horizontal = false;
+			    
 
 		    }
-		    else if(Input.GetMouseButtonUp(0))
+		    else if(Input.GetMouseButtonUp(0) && current)
 		    {
 			    current.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
 
@@ -226,13 +244,8 @@ public class PuzzleController : MonoBehaviour
 				    isWin = true;
 				    Debug.Log("!WIN!");
 			    }
-			    else
-			    {
-				    current.transform.position = scrollPosition;
-			    }
-			    
+
 			    current = null;
-			    scrollRect.horizontal = true;
 		    }	
 		    
 	    }
