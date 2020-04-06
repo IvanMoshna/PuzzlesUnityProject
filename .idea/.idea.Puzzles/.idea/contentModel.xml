@@ -9,11 +9,70 @@
       <e p="Assets" t="Include">
         <e p="_Project" t="Include">
           <e p="Scripts" t="Include">
-            <e p="PuzzleScript.cs" t="Include" />
+            <e p="PuzzleController.cs" t="Include" />
+            <e p="Settings" t="Include">
+              <e p="SettingsGame.cs" t="Include" />
+            </e>
+            <e p="SnapScrollingScript.cs" t="Include" />
           </e>
         </e>
         <e p="Editor" t="Include">
           <e p="AutoSaveExtension.cs" t="Include" />
+        </e>
+        <e p="IdleCore" t="Include">
+          <e p="Behavior" t="Include">
+            <e p="Behavior.cs" t="Include" />
+          </e>
+          <e p="Common" t="Include">
+            <e p="Entity.cs" t="Include" />
+            <e p="GizmoSphere.cs" t="Include" />
+            <e p="INeedInitialization.cs" t="Include" />
+            <e p="MonoSingleton.cs" t="Include" />
+            <e p="SceneStarter.cs" t="Include" />
+            <e p="Singleton.cs" t="Include" />
+            <e p="ToolBox.cs" t="Include" />
+            <e p="Tools.cs" t="Include" />
+            <e p="ToolSaver.cs" t="Include" />
+            <e p="ToolSignals.cs" t="Include" />
+          </e>
+          <e p="Controllers" t="Include">
+            <e p="Controller.cs" t="Include" />
+          </e>
+          <e p="Data" t="Include">
+            <e p="IData.cs" t="Include" />
+            <e p="Money.cs" t="Include" />
+            <e p="MoneyValue.cs" t="Include" />
+            <e p="Tags.cs" t="Include" />
+          </e>
+          <e p="Helpers" t="Include">
+            <e p="FacebookStart.cs" t="Include" />
+            <e p="FirebaseScript.cs" t="Include" />
+            <e p="FixedCameraMoveSmooth.cs" t="Include" />
+            <e p="FlurryStart.cs" t="Include" />
+            <e p="LeanCameraMoveSmooth.cs" t="Include" />
+            <e p="MoneyOfflineCounter.cs" t="Include" />
+            <e p="PreBuildCheck.cs" t="Include" />
+            <e p="ScriptFollow.cs" t="Include" />
+            <e p="Unwrapper.cs" t="Include" />
+          </e>
+          <e p="Numbers" t="Include">
+            <e p="BigInteger.cs" t="Include" />
+            <e p="NumericalFormatter.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Packages" t="Include">
+          <e p="SimpleLocalization" t="Include">
+            <e p="Downloader.cs" t="Include" />
+            <e p="Editor" t="Include">
+              <e p="LocalizationSyncEditor.cs" t="Include" />
+            </e>
+            <e p="Example.cs" t="Include" />
+            <e p="LocalizationManager.cs" t="Include" />
+            <e p="LocalizationSync.cs" t="Include" />
+            <e p="LocalizedDropdown.cs" t="Include" />
+            <e p="LocalizedText.cs" t="Include" />
+            <e p="Sheet.cs" t="Include" />
+          </e>
         </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />

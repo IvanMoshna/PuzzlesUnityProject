@@ -1,22 +1,27 @@
 ﻿using System;
-
 using System.Collections;
 using System.Collections.Generic;
+using Common;
+using Puzzles.Settings;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class PuzzleScript : MonoBehaviour
+public class PuzzleController : MonoBehaviour
 {
 
     public MeshRenderer originalPuzzle; //с него генерим пазлы
     public MeshRenderer puzzleBW;
     public float targetDistance; //дистанция от точки своего назначения, чем больше, тем больше допустимая неточность изображения
     public string puzzleTag = "GameController";
-    public int columns;
-    public int lines;
+    /*public int columns;
+    public int lines;*/
     public float smooth; //сглаживание всех пазлов во время соединения
+    //public float puzzleDistance;
     public GameObject tookenPuzzle;
+    public ScrollRect scrollRect;
 
 
     private int puzzleCounter;
@@ -26,14 +31,19 @@ public class PuzzleScript : MonoBehaviour
     private Transform current;
     private Vector3 offset;
     private bool isWin;
+    private Vector3 scrollPosition;
+
+    private SettingsGame gameSettings;
+
+    //public SnapScrollingScript snapScrolling;
 
     void NewGame()
     {
 	    originalPuzzle.gameObject.SetActive(true);
 	    puzzleBW.gameObject.SetActive(false);
         Clear();
-        StartCoroutine(Generate());
-       
+	    StartCoroutine(Generate());
+	   
     }
     void Clear()
     {
@@ -63,8 +73,8 @@ public class PuzzleScript : MonoBehaviour
 	    int height = (int) (posEnd.y - posStart.y);
 
 	    // определяем размеры пазла
-	    int w_cell = width / columns;
-	    int h_cell = height / lines;
+	    int w_cell = width / gameSettings.columns;
+	    int h_cell = height / gameSettings.lines;
 
 	    // учитываем рамку, т.е. неиспользуемое пространство вокруг холста
 	    int xAdd = (Screen.width - width) / 2;
@@ -73,10 +83,10 @@ public class PuzzleScript : MonoBehaviour
 	    yield return new WaitForEndOfFrame();
 
 
-	    float distance = 0f;
-	    for (int y = 0; y < lines; y++)
+	    float distance = -250f;
+	    for (int y = 0; y < gameSettings.lines; y++)
 	    {
-		    for (int x = 0; x < columns; x++)
+		    for (int x = 0; x < gameSettings.columns; x++)
 		    {
 			    // делаем снимок части экрана
 			    Rect rect = new Rect(0, 0, w_cell, h_cell);
@@ -93,7 +103,7 @@ public class PuzzleScript : MonoBehaviour
 			    puzzlePos.Add(position);
 			    Debug.Log("puzzlePos " + position);
 			    
-			    position = new Vector3( distance,0, 0);
+			    position = new Vector3(  distance,0, 0);
 			    obj.transform.localPosition = position;
 			    //obj.transform.position = position;
 			    Debug.Log("localPosition" + obj.transform.position);
@@ -112,32 +122,29 @@ public class PuzzleScript : MonoBehaviour
 			   
 			    puzzle.Add(ren);
 			    puzzleCounter++;
-			    distance += 100f;
+			    distance += 200f;
 		    }
 
-		   
 	    }
 
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
 	    int g = 0;
 	    Debug.Log("SetPos: " + g++);
-	    
-	    for (int k = 0; k < puzzlePos.Count; k++)
-	    {
-		    //Debug.Log("puzzlePoz: " + puzzlePos[k]);
-	    }
     }
 
 
-    private void Start()
+    private void Awake()
     {
+	    gameSettings = ToolBox.Get<SettingsGame>();
 	    NewGame();
 	    Debug.Log("NewGame!");
 
     }
     void GetPuzzle()
     {
+	   
+	    Debug.Log("SCROLL POSITION: " + scrollPosition);
 	    // массив рейкаста, чтобы фильтровать спрайты по глубине Z (тот что ближе, будет первым элементом массива)
 	    RaycastHit2D[] hit = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 	    if(hit.Length > 0 && hit[0].transform.tag == puzzleTag)
@@ -147,8 +154,9 @@ public class PuzzleScript : MonoBehaviour
 		    sortingOrder = current.GetComponent<SpriteRenderer>().sortingOrder;
 		    current.GetComponent<SpriteRenderer>().sortingOrder = puzzleCounter + 1;
 		    //Debug.Log("currentName = " + current.name);
-		    current.SetParent(tookenPuzzle.transform);//чтобы потом не скролилось все
+		    //current.SetParent(tookenPuzzle.transform);//чтобы потом не скролилось все
 		    Debug.Log("position " + current.transform.position);
+		    scrollPosition = current.transform.position;
 	    }
     }
     
@@ -164,6 +172,7 @@ public class PuzzleScript : MonoBehaviour
 			    i++;
 			    puzzle[j].GetComponent<BoxCollider2D>().enabled = false;
 		    }
+		    
 	    }
 	    return i;
     }
@@ -186,7 +195,7 @@ public class PuzzleScript : MonoBehaviour
     {
 	    if(isWin)
 	    {
-		    if(CheckPuzzle(0.5f) == puzzle.Count)
+		    if(CheckPuzzle(gameSettings.puzzleDistance) == puzzle.Count)
 		    {
 			    Clear();
 			    originalPuzzle.gameObject.SetActive(true);
@@ -196,6 +205,7 @@ public class PuzzleScript : MonoBehaviour
 			    for(int j = 0; j < puzzle.Count; j++)
 			    {
 				    puzzle[j].transform.position = Vector3.Lerp(puzzle[j].transform.position, puzzlePos[j], smooth * Time.deltaTime);
+				    Debug.Log("ХУЙ!");
 			    }
 		    }
 	    }
@@ -204,19 +214,27 @@ public class PuzzleScript : MonoBehaviour
 		    if(Input.GetMouseButtonDown(0))
 		    {
 			    GetPuzzle();
-			    
+			    scrollRect.horizontal = false;
+
 		    }
-		    else if(Input.GetMouseButtonUp(0) && current)
+		    else if(Input.GetMouseButtonUp(0))
 		    {
 			    current.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
-			    current = null;
 
 			    if(CheckPuzzle(targetDistance) == puzzle.Count)
 			    {
 				    isWin = true;
 				    Debug.Log("!WIN!");
 			    }
+			    else
+			    {
+				    current.transform.position = scrollPosition;
+			    }
+			    
+			    current = null;
+			    scrollRect.horizontal = true;
 		    }	
+		    
 	    }
 
 	    if(current)
