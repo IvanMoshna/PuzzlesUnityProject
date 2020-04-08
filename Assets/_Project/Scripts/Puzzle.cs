@@ -8,6 +8,7 @@ using Image = UnityEngine.UI.Image;
 
 public class Puzzle : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IPointerUpHandler, IDragHandler
 {
+    public int puzzleID;
     public PuzzleController puzzleController;
     public Vector2 puzzlePos;
 

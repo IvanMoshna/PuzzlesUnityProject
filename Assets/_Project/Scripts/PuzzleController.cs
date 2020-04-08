@@ -19,6 +19,7 @@ public class PuzzleController : MonoBehaviour
     public List<GameObject> puzzlePrefabs = new List<GameObject>();
     public GameObject puzzlePrefab;
     public SettingsGame gameSettings;
+    public bool isGenerated;
 
     private int puzzleCounter;
     private int sortingOrder;
@@ -29,6 +30,7 @@ public class PuzzleController : MonoBehaviour
 
     void NewGame()
     {
+	    isGenerated = false;
 	    originalPuzzle.gameObject.SetActive(true);
 	    puzzleBW.gameObject.SetActive(false);
         Clear();
@@ -47,7 +49,7 @@ public class PuzzleController : MonoBehaviour
 
     IEnumerator Generate() //создание пазлов/нарезка текстуры
     {
-	    Debug.Log("Хоп, генерейт!");
+	    //Debug.Log("Хоп, генерейт!");
 	    // переносим размеры холста в пространство экрана
 	    Vector3 posStart =
 		    Camera.main.WorldToScreenPoint(new Vector3(originalPuzzle.bounds.min.x, originalPuzzle.bounds.min.y,
@@ -69,6 +71,7 @@ public class PuzzleController : MonoBehaviour
 
 	    yield return new WaitForEndOfFrame();
 
+	    
 	    for (int y = 0; y < gameSettings.lines; y++)
 	    {
 		    for (int x = 0; x < gameSettings.columns; x++)
@@ -76,6 +79,7 @@ public class PuzzleController : MonoBehaviour
 			    // делаем снимок части экрана
 			    Rect rect = new Rect(0, 0, w_cell, h_cell);
 			    rect.center = new Vector2((w_cell * x + w_cell / 2) + xAdd, (h_cell * y + h_cell / 2) + yAdd);
+
 			    Vector3 position = Camera.main.ScreenToWorldPoint(rect.center);
 			    Texture2D tex = new Texture2D(w_cell, h_cell, TextureFormat.ARGB32, false);
 			    tex.ReadPixels(rect, 0, 0);
@@ -84,6 +88,8 @@ public class PuzzleController : MonoBehaviour
 			    //настройка позиции
 			    position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f, 0);
 			    puzzlePos.Add(position);
+			    
+			    //по идее здесь надо какой нить ShapeGenerator впилить
 
 			    // конвертируем текстуру в спрайт
 			    GameObject instPuzzle = Instantiate(puzzlePrefab, transform, false);
@@ -101,12 +107,15 @@ public class PuzzleController : MonoBehaviour
 			    instPiece.puzzleController = this;
 			    instPiece.puzzlePos = position;
 			    puzzlePrefabs.Add(instPuzzle);
+			    //instPuzzle.transform.position = new Vector3(position.x, position.y, -1);
 
+			    instPiece.puzzleID = puzzleCounter;
 			    puzzleCounter++;
 		    }
 
 	    }
 
+	    isGenerated = true;
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
     }
