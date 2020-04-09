@@ -20,10 +20,12 @@ public class PuzzleController : MonoBehaviour
     public GameObject puzzlePrefab;
     public SettingsGame gameSettings;
     public bool isGenerated;
+    public GameObject contentBox;
+    public ScrollView scrollView;
 
     private int puzzleCounter;
     private int sortingOrder;
-    private List<Vector3> puzzlePos = new List<Vector3>();
+    public List<Vector3> puzzlePos = new List<Vector3>();
     private Transform current;
     private Vector3 offset;
     private bool isWin;
@@ -40,10 +42,10 @@ public class PuzzleController : MonoBehaviour
     {
         isWin = false;
         puzzleCounter = 0;
-        foreach (Transform child in transform)
+        /*foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
-        }
+        }*/
         puzzlePos = new List<Vector3>();
     }
 
@@ -88,8 +90,6 @@ public class PuzzleController : MonoBehaviour
 			    //настройка позиции
 			    position = new Vector3(((int) (position.x * 100f)) / 100f, ((int) (position.y * 100f)) / 100f, 0);
 			    puzzlePos.Add(position);
-			    
-			    //по идее здесь надо какой нить ShapeGenerator впилить
 
 			    // конвертируем текстуру в спрайт
 			    GameObject instPuzzle = Instantiate(puzzlePrefab, transform, false);
