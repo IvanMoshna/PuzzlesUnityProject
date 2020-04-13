@@ -49,9 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalPuzzle: {fileID: 0}
-  targetDistance: 0.5
-  puzzleTag: PuzzlePiece
-  columns: 3
-  lines: 3
-  smooth: 5
-  scrollView: {fileID: 0}
+  puzzleBW: {fileID: 0}
+  checkedPuzzles: {fileID: 0}
+  puzzlePrefabs: []
+  puzzlePrefab: {fileID: 0}
+  gameSettings: {fileID: 0}
+  isGenerated: 0
+  contentBox: {fileID: 0}
+  puzzlePos: []

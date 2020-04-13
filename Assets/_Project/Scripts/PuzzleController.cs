@@ -92,7 +92,8 @@ public class PuzzleController : MonoBehaviour
 			    puzzlePos.Add(position);
 
 			    // конвертируем текстуру в спрайт
-			    GameObject instPuzzle = Instantiate(puzzlePrefab, transform, false);
+			    GameObject instPuzzleParent = Instantiate(puzzlePrefab, transform, false);
+			    GameObject instPuzzle = instPuzzleParent.transform.GetChild(0).gameObject;
 			    SpriteRenderer ren = instPuzzle.AddComponent<SpriteRenderer>();
 				int unit = Mathf.RoundToInt((float) Screen.height /
 				                            (Camera.main.orthographicSize *
@@ -106,7 +107,7 @@ public class PuzzleController : MonoBehaviour
 			    Puzzle instPiece = instPuzzle.GetComponent<Puzzle>();
 			    instPiece.puzzleController = this;
 			    instPiece.puzzlePos = position;
-			    puzzlePrefabs.Add(instPuzzle);
+			    puzzlePrefabs.Add(instPuzzleParent);
 			    //instPuzzle.transform.position = new Vector3(position.x, position.y, -1);
 
 			    instPiece.puzzleID = puzzleCounter;
@@ -118,6 +119,12 @@ public class PuzzleController : MonoBehaviour
 	    isGenerated = true;
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
+	    
+	    foreach (var p in puzzlePrefabs)
+	    {
+		    p.GetComponentInChildren<Image>().sprite = p.GetComponent<Image>().sprite;
+	    }
+	    
     }
 
     private void Awake()
@@ -126,6 +133,8 @@ public class PuzzleController : MonoBehaviour
 	    NewGame();
 	    Debug.Log("NewGame!");
 
+	   
+	    
     }
 
 }

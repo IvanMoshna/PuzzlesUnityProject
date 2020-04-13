@@ -26,12 +26,11 @@ public class ShapeGenerator : MonoBehaviour
         }
     }
     
-    void SetShape(GameObject go1, GameObject go2, Transform parrent, List<GameObject> gameObjects)
+    /*void SetShape(GameObject go1, GameObject go2, Transform parrent, List<GameObject> gameObjects)
     {
         //Debug.Log("First puzzleID = " + gameObjects[ind1].GetComponent<Puzzle>().puzzleID);
         //Debug.Log("Second puzzleID = " + gameObjects[ind2].GetComponent<Puzzle>().puzzleID);
         
-        //ЛИБО СПЕРВА УДАЛЯТЬ С бОльшим ID, ЛИБО ПРИДУМАТЬ ДРУГОЙ СПОСОБ!!! 
         gameObjects.Remove(go2);
         gameObjects.Remove(go1);
         
@@ -41,8 +40,29 @@ public class ShapeGenerator : MonoBehaviour
         go1.transform.localPosition = new Vector3(go1.transform.localPosition.x, go1.transform.localPosition.y, -1);
         isShaped = true;
         Debug.Log("SHAPED!");
-    }
+    }*/
 
+    public void SetShape(List <GameObject> puzzles, params GameObject[] pieces)
+    {
+        GameObject mainParent = pieces[0];
+        GameObject rez = mainParent.transform.GetChild(0).gameObject;
+
+        for (int i = 1; i < pieces.Length; i++)
+        {
+            //GameObject instPuzzle = instPuzzleParent.transform.GetChild(0).gameObject;
+            GameObject child = pieces[i].transform.GetChild(0).gameObject;
+            child.transform.SetParent(rez.transform, true);
+            child.GetComponent<Image>().raycastTarget = false;
+            puzzles.Remove(pieces[i]);
+            Destroy(pieces[i]);
+        }
+        
+        mainParent.transform.SetParent(puzzleController.contentBox.transform);
+
+
+        //return rez;
+    }
+    
     void SetInContent(List<GameObject> gameObjects, Transform content)
     {
         
@@ -53,7 +73,6 @@ public class ShapeGenerator : MonoBehaviour
             puzzle.transform.localPosition = new Vector3(puzzle.transform.localPosition.x, puzzle.transform.localPosition.y, -1);
             
             //Debug.Log("puzzle parent after: " + puzzle.transform.parent.name);
-
         }
 
         isInContent = true;
@@ -61,15 +80,10 @@ public class ShapeGenerator : MonoBehaviour
     private void Update()
     {
         if (puzzleController.isGenerated && !isShaped && !isInContent)
-        {
-            /*foreach (var p in puzzleController.puzzlePrefabs)
-            {
-                Debug.Log("ID " + p.GetComponent<Puzzle>().puzzleID);
-            }*/
-            Debug.Log("0ID = " + puzzleController.puzzlePrefabs[0].GetComponent<Puzzle>().puzzleID);
-           SetFinalPositions(puzzleController.puzzlePrefabs, puzzleController.puzzlePos);
-           SetShape(puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1], puzzleController.contentBox.transform, puzzleController.puzzlePrefabs);
-           SetInContent(puzzleController.puzzlePrefabs, puzzleController.contentBox.transform);
+        { 
+            SetFinalPositions(puzzleController.puzzlePrefabs, puzzleController.puzzlePos);
+            SetShape(puzzleController.puzzlePrefabs,puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1] );
+            SetInContent(puzzleController.puzzlePrefabs, puzzleController.contentBox.transform);
         }
     }
 }
