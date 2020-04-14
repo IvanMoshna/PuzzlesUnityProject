@@ -26,22 +26,6 @@ public class ShapeGenerator : MonoBehaviour
         }
     }
     
-    /*void SetShape(GameObject go1, GameObject go2, Transform parrent, List<GameObject> gameObjects)
-    {
-        //Debug.Log("First puzzleID = " + gameObjects[ind1].GetComponent<Puzzle>().puzzleID);
-        //Debug.Log("Second puzzleID = " + gameObjects[ind2].GetComponent<Puzzle>().puzzleID);
-        
-        gameObjects.Remove(go2);
-        gameObjects.Remove(go1);
-        
-        go1.transform.SetParent(parrent);
-        go2.transform.SetParent(go1.transform);
-
-        go1.transform.localPosition = new Vector3(go1.transform.localPosition.x, go1.transform.localPosition.y, -1);
-        isShaped = true;
-        Debug.Log("SHAPED!");
-    }*/
-
     public void SetShape(List <GameObject> puzzles, params GameObject[] pieces)
     {
         GameObject mainParent = pieces[0].GetComponent<PuzzleItem>().imageBox;
@@ -58,12 +42,29 @@ public class ShapeGenerator : MonoBehaviour
             Destroy(pieces[i]);
         }
 
-        
-        
-        
-        
-        //mainParent.transform.SetParent(puzzleController.contentBox.transform);
-        //return rez;
+        int coef = mainParent.transform.childCount;
+        Debug.Log("Coef = " + coef);
+        if (coef > 1)
+        {
+            float x=0;
+            float y=0;
+            int k = 10;
+            for (int i = 0; i < coef; i++)
+            {
+                if (x - mainParent.transform.GetChild(i).transform.position.x < k)
+                {
+                    x = mainParent.transform.GetChild(i).transform.position.x;
+                    mainParent.GetComponent<RectTransform>().sizeDelta = new Vector2(mainParent.GetComponent<RectTransform>().sizeDelta.x + 50, mainParent.GetComponent<RectTransform>().sizeDelta.y);
+                    Debug.Log("X + 50");
+                }
+                if (y - mainParent.transform.GetChild(i).transform.position.y < k)
+                {
+                    y = mainParent.transform.GetChild(i).transform.position.y;
+                    mainParent.GetComponent<RectTransform>().sizeDelta = new Vector2(mainParent.GetComponent<RectTransform>().sizeDelta.x, mainParent.GetComponent<RectTransform>().sizeDelta.y+50);
+                    Debug.Log("Y + 50");
+                }
+            }
+        }
     }
     
     void SetInContent(List<GameObject> gameObjects, Transform content)
@@ -71,11 +72,8 @@ public class ShapeGenerator : MonoBehaviour
         
         foreach (var puzzle in gameObjects)
         {
-            //Debug.Log("puzzle parent before: " + puzzle.transform.parent.name);
             puzzle.transform.SetParent(content, true); 
             puzzle.transform.localPosition = new Vector3(puzzle.transform.localPosition.x, puzzle.transform.localPosition.y, -1);
-            
-            //Debug.Log("puzzle parent after: " + puzzle.transform.parent.name);
         }
 
         isInContent = true;

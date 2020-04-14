@@ -13,7 +13,15 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
+        //костыль
+        if (gameObject.transform.childCount > 1)
+        {
+            float pivotCoef = 0.25f;
+            Vector2 pivotVector =
+                new Vector2(gameObject.transform.GetChild(0).GetComponent<RectTransform>().pivot.x + pivotCoef,
+                    gameObject.transform.GetChild(0).GetComponent<RectTransform>().pivot.y + pivotCoef);
+            gameObject.GetComponent<RectTransform>().pivot = pivotVector;
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -29,6 +37,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
             parentPuzzle.transform.SetParent(puzzleController.checkedPuzzles.transform);
             parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
+            
         }
         else
         {
@@ -40,4 +49,5 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     {
         gameObject.GetComponent<RectTransform>().anchoredPosition += eventData.delta;
     }
+    
 }
