@@ -1,30 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using Image = UnityEngine.UI.Image;
+using UnityEngine.EventSystems;
 
-public class Puzzle : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IPointerUpHandler, IDragHandler
+public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    public int puzzleID;
+    public List<Puzzle> images;
     public PuzzleController puzzleController;
-    public Vector2 puzzlePos;
+ 
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        //gameObject.transform.SetParent(puzzleController.checkedPuzzles.transform, true);
-        ///Debug.Log("PARENT = " + gameObject.transform.parent);
-    }
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        Debug.Log("On Begin Drag");
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        var puzzlePos = images[0].puzzlePos;
         Debug.Log("Distance = " + Vector2.Distance(gameObject.transform.position, puzzlePos));
         if (Vector2.Distance(gameObject.transform.position, puzzlePos) < puzzleController.gameSettings.puzzleDistance)
         {
@@ -34,7 +28,7 @@ public class Puzzle : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IPo
             gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y, -1);
 
             parentPuzzle.transform.SetParent(puzzleController.checkedPuzzles.transform);
-            parentPuzzle.GetComponent<Image>().enabled = false;
+            parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
         }
         else
         {

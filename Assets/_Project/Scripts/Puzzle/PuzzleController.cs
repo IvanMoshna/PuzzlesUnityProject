@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Puzzles.Settings;
 using UnityEngine;
@@ -93,7 +94,7 @@ public class PuzzleController : MonoBehaviour
 
 			    // конвертируем текстуру в спрайт
 			    GameObject instPuzzleParent = Instantiate(puzzlePrefab, transform, false);
-			    GameObject instPuzzle = instPuzzleParent.transform.GetChild(0).gameObject;
+			    GameObject instPuzzle = instPuzzleParent.GetComponent<PuzzleItem>().gameObject;
 			    SpriteRenderer ren = instPuzzle.AddComponent<SpriteRenderer>();
 				int unit = Mathf.RoundToInt((float) Screen.height /
 				                            (Camera.main.orthographicSize *
@@ -101,11 +102,13 @@ public class PuzzleController : MonoBehaviour
 			    ren.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), unit);
 			    ren.sortingOrder = 1;
 			    
-			    instPuzzle.GetComponent<Image>().sprite = ren.sprite;
-			    instPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
+			    //instPuzzle.GetComponent<Image>().sprite = ren.sprite;
+			    //instPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
 
-			    Puzzle instPiece = instPuzzle.GetComponent<Puzzle>();
-			    instPiece.puzzleController = this;
+			    Puzzle instPiece = instPuzzle.GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0];
+			    instPiece.GetComponent<Image>().sprite = ren.sprite;
+			    instPiece.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
+			    instPuzzle.GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().puzzleController = this;
 			    instPiece.puzzlePos = position;
 			    puzzlePrefabs.Add(instPuzzleParent);
 			    //instPuzzle.transform.position = new Vector3(position.x, position.y, -1);
@@ -120,10 +123,10 @@ public class PuzzleController : MonoBehaviour
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
 	    
-	    foreach (var p in puzzlePrefabs)
+	    /*foreach (var p in puzzlePrefabs)
 	    {
 		    p.GetComponentInChildren<Image>().sprite = p.GetComponent<Image>().sprite;
-	    }
+	    }*/
 	    
     }
 

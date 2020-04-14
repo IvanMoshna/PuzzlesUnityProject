@@ -44,22 +44,25 @@ public class ShapeGenerator : MonoBehaviour
 
     public void SetShape(List <GameObject> puzzles, params GameObject[] pieces)
     {
-        GameObject mainParent = pieces[0];
-        GameObject rez = mainParent.transform.GetChild(0).gameObject;
-
+        GameObject mainParent = pieces[0].GetComponent<PuzzleItem>().imageBox;
+        pieces[0].GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0].GetComponent<Image>().raycastTarget = false;   
+        
         for (int i = 1; i < pieces.Length; i++)
         {
-            //GameObject instPuzzle = instPuzzleParent.transform.GetChild(0).gameObject;
-            GameObject child = pieces[i].transform.GetChild(0).gameObject;
-            child.transform.SetParent(rez.transform, true);
+            GameObject child = pieces[i].GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0].gameObject;
+            child.transform.SetParent(mainParent.transform, true);
+            mainParent.GetComponent<ImageBox>().images.Add(child.GetComponent<Puzzle>());
             child.GetComponent<Image>().raycastTarget = false;
+            
             puzzles.Remove(pieces[i]);
             Destroy(pieces[i]);
         }
+
         
-        mainParent.transform.SetParent(puzzleController.contentBox.transform);
-
-
+        
+        
+        
+        //mainParent.transform.SetParent(puzzleController.contentBox.transform);
         //return rez;
     }
     
@@ -82,7 +85,7 @@ public class ShapeGenerator : MonoBehaviour
         if (puzzleController.isGenerated && !isShaped && !isInContent)
         { 
             SetFinalPositions(puzzleController.puzzlePrefabs, puzzleController.puzzlePos);
-            SetShape(puzzleController.puzzlePrefabs,puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1] );
+            SetShape(puzzleController.puzzlePrefabs,puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1], puzzleController.puzzlePrefabs[6] );
             SetInContent(puzzleController.puzzlePrefabs, puzzleController.contentBox.transform);
         }
     }
