@@ -434,8 +434,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 978890043}
-  - {fileID: 1708413278}
   - {fileID: 1276928538}
+  - {fileID: 1708413278}
   - {fileID: 135627926}
   - {fileID: 883522950}
   - {fileID: 976106946}
@@ -768,7 +768,7 @@ RectTransform:
   m_Children:
   - {fileID: 526705066}
   m_Father: {fileID: 336406863}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1018,7 +1018,7 @@ PrefabInstance:
         type: 3}
       propertyPath: scrollView
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1276928537}
     - target: {fileID: 8405968263711143714, guid: 90607523e71bd044fa962ab8fc72b1fe,
         type: 3}
       propertyPath: puzzleBW
@@ -1113,7 +1113,7 @@ PrefabInstance:
     - target: {fileID: 3100813999493466942, guid: 90607523e71bd044fa962ab8fc72b1fe,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8405968263711143713, guid: 90607523e71bd044fa962ab8fc72b1fe,
         type: 3}

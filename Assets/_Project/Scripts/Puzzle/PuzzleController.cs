@@ -22,7 +22,7 @@ public class PuzzleController : MonoBehaviour
     public SettingsGame gameSettings;
     public bool isGenerated;
     public GameObject contentBox;
-    public ScrollView scrollView;
+    public GameObject scrollView;
 
     private int puzzleCounter;
     private int sortingOrder;
@@ -112,13 +112,14 @@ public class PuzzleController : MonoBehaviour
 			    instPiece.puzzlePos = position;
 			    puzzlePrefabs.Add(instPuzzleParent);
 			    //instPuzzle.transform.position = new Vector3(position.x, position.y, -1);
+			    instPuzzle.GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().scrollRect = scrollView.GetComponent<ScrollRect>();
 
 			    instPiece.puzzleID = puzzleCounter;
 			    puzzleCounter++;
 		    }
 
 	    }
-
+		
 	    isGenerated = true;
 	    originalPuzzle.gameObject.SetActive(false);
 	    puzzleBW.gameObject.SetActive(true);
@@ -135,11 +136,12 @@ public class PuzzleController : MonoBehaviour
 	    gameSettings = ToolBox.Get<SettingsGame>();
 	    NewGame();
 	    Debug.Log("NewGame!");
-
-	   
-	    
     }
 
+    private void Update()
+    {
+	    
+    }
 }
     
     

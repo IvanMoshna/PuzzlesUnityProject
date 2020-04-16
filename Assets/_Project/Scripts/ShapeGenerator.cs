@@ -55,13 +55,13 @@ public class ShapeGenerator : MonoBehaviour
                 {
                     x = mainParent.transform.GetChild(i).transform.position.x;
                     mainParent.GetComponent<RectTransform>().sizeDelta = new Vector2(mainParent.GetComponent<RectTransform>().sizeDelta.x + 50, mainParent.GetComponent<RectTransform>().sizeDelta.y);
-                    Debug.Log("X + 50");
+                    //Debug.Log("X + 50");
                 }
                 if (y - mainParent.transform.GetChild(i).transform.position.y < k)
                 {
                     y = mainParent.transform.GetChild(i).transform.position.y;
                     mainParent.GetComponent<RectTransform>().sizeDelta = new Vector2(mainParent.GetComponent<RectTransform>().sizeDelta.x, mainParent.GetComponent<RectTransform>().sizeDelta.y+50);
-                    Debug.Log("Y + 50");
+                    //Debug.Log("Y + 50");
                 }
             }
         }
