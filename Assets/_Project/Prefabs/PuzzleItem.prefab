@@ -167,7 +167,8 @@ MonoBehaviour:
   puzzleController: {fileID: 0}
   scrollRect: {fileID: 0}
   holdTime: 0.5
-  deltaY: 20
+  deltaY: 10
+  imageManager: {fileID: 0}
 --- !u!1 &8407776446433471717
 GameObject:
   m_ObjectHideFlags: 0

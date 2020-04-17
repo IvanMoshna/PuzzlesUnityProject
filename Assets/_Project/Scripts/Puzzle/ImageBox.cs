@@ -15,6 +15,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public ScrollRect scrollRect;
     public float holdTime = 0.5f;
     public float deltaY;
+    public ImageManager imageManager;
     
     private float timer;
     private bool isStartingTimer;
@@ -27,7 +28,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        
+        imageManager.FrameOn(); 
         //костыль
             if (gameObject.transform.childCount > 1)
             {
@@ -41,6 +42,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        imageManager.FrameOff();
         var puzzlePos = images[0].puzzlePos;
 //        Debug.Log("Distance = " + Vector2.Distance(gameObject.transform.position, puzzlePos));
         if (Vector2.Distance(gameObject.transform.position, puzzlePos) < puzzleController.gameSettings.puzzleDistance)
@@ -65,17 +67,13 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        
-        Debug.Log("eventData = " + eventData.delta.x);
-        //if(eventData.delta.x<deltaY && !isDraggable || eventData.delta.x>-deltaY&&!isDraggable)
         if(eventData.delta.y<deltaY && !isDraggable)
             scrollRect.OnDrag(eventData);
         else
         {
-            Debug.Log("DRAGGABLE");
             isDraggable = true;
             gameObject.GetComponent<RectTransform>().anchoredPosition += eventData.delta;
-
+            
         }
     }
     public void OnEndDrag(PointerEventData eventData)

@@ -65,6 +65,7 @@
             <e p="NumericalFormatter.cs" t="Include" />
           </e>
         </e>
+        <e p="ImageManager.cs" t="Include" />
         <e p="Packages" t="Include">
           <e p="SimpleLocalization" t="Include">
             <e p="Downloader.cs" t="Include" />

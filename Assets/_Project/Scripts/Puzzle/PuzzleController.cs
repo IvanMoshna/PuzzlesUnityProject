@@ -23,6 +23,7 @@ public class PuzzleController : MonoBehaviour
     public bool isGenerated;
     public GameObject contentBox;
     public GameObject scrollView;
+    public ImageManager imageManager;
 
     private int puzzleCounter;
     private int sortingOrder;
@@ -104,7 +105,7 @@ public class PuzzleController : MonoBehaviour
 			    
 			    //instPuzzle.GetComponent<Image>().sprite = ren.sprite;
 			    //instPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
-
+			    ImageBox imageBox = instPuzzle.GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>();
 			    Puzzle instPiece = instPuzzle.GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0];
 			    instPiece.GetComponent<Image>().sprite = ren.sprite;
 			    instPiece.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
@@ -112,7 +113,8 @@ public class PuzzleController : MonoBehaviour
 			    instPiece.puzzlePos = position;
 			    puzzlePrefabs.Add(instPuzzleParent);
 			    //instPuzzle.transform.position = new Vector3(position.x, position.y, -1);
-			    instPuzzle.GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().scrollRect = scrollView.GetComponent<ScrollRect>();
+			    imageBox.scrollRect = scrollView.GetComponent<ScrollRect>();
+			    imageBox.imageManager = imageManager;
 
 			    instPiece.puzzleID = puzzleCounter;
 			    puzzleCounter++;
