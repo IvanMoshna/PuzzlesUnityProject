@@ -18,6 +18,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public ImageManager imageManager;
     
     private bool isDraggable;
+    private bool isFramed;
     private EventSystem es;
     public void OnBeginDrag (PointerEventData eventData)
     {
@@ -26,7 +27,6 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        imageManager.FrameOn(); 
         //костыль
             if (gameObject.transform.childCount > 1)
             {
@@ -36,6 +36,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
                         gameObject.transform.GetChild(0).GetComponent<RectTransform>().pivot.y + pivotCoef);
                 gameObject.GetComponent<RectTransform>().pivot = pivotVector;
             }
+            isFramed = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -51,18 +52,14 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
             parentPuzzle.transform.SetParent(puzzleController.checkedPuzzles.transform);
             parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
-            
-            //создаем изображение для каждого имеджа и ставим на позицию
-            //нужен именно PuzzleItem с его координатами.
 
+            //repeat pattern
             foreach (var bg in imageManager.backgroundnPanels)
             {
                 Vector3 pos = parentPuzzle.transform.localPosition;
                 GameObject puzzleClone = Instantiate(parentPuzzle, bg.transform);
                 puzzleClone.transform.localPosition = pos;
             }
-
-
         }
         else
         {
@@ -77,8 +74,14 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         else
         {
             isDraggable = true;
+           
             gameObject.GetComponent<RectTransform>().anchoredPosition += eventData.delta;
-            
+            if (isFramed)
+            {
+                Debug.Log("is Framed");
+                imageManager.FrameOn();
+                isFramed = false;
+            }
         }
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -86,5 +89,6 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         
         scrollRect.OnEndDrag(eventData);
         isDraggable = false;
+        isFramed = false;
     }
 }
