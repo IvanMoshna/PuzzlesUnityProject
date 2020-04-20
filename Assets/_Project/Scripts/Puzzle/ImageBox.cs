@@ -17,8 +17,6 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public float deltaY;
     public ImageManager imageManager;
     
-    private float timer;
-    private bool isStartingTimer;
     private bool isDraggable;
     private EventSystem es;
     public void OnBeginDrag (PointerEventData eventData)
@@ -44,7 +42,6 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     {
         imageManager.FrameOff();
         var puzzlePos = images[0].puzzlePos;
-//        Debug.Log("Distance = " + Vector2.Distance(gameObject.transform.position, puzzlePos));
         if (Vector2.Distance(gameObject.transform.position, puzzlePos) < puzzleController.gameSettings.puzzleDistance)
         {
             GameObject parentPuzzle = gameObject.transform.parent.gameObject;
@@ -55,14 +52,22 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             parentPuzzle.transform.SetParent(puzzleController.checkedPuzzles.transform);
             parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
             
+            //создаем изображение для каждого имеджа и ставим на позицию
+            //нужен именно PuzzleItem с его координатами.
+
+            foreach (var bg in imageManager.backgroundnPanels)
+            {
+                Vector3 pos = parentPuzzle.transform.localPosition;
+                GameObject puzzleClone = Instantiate(parentPuzzle, bg.transform);
+                puzzleClone.transform.localPosition = pos;
+            }
+
+
         }
         else
         {
             gameObject.transform.localPosition = new Vector3(0,0,0);
         }
-
-        isStartingTimer = false;
-        timer = 0;
     }
 
     public void OnDrag(PointerEventData eventData)

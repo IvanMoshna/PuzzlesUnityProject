@@ -30,4 +30,12 @@ public class ImageManager : MonoBehaviour
         }
         Debug.Log("color " + backgroundnPanels[1].GetComponent<MeshRenderer>().material.color.r);
     }
+
+    public void RepeatPattern(GameObject pattern)
+    {
+        foreach (var bp in backgroundnPanels)
+        {
+            
+        }
+    }
 }
