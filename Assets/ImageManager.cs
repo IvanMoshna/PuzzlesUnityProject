@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class ImageManager : MonoBehaviour
 {
-    public MeshFilter mainImage;
-    public List<Sprite> images;
-    public List<MeshRenderer> backgroundnPanels;
+    public List<Image> backgroundnPanels;
 
 
     public void FrameOn()
@@ -15,8 +13,7 @@ public class ImageManager : MonoBehaviour
         Debug.Log("FrameON");
         foreach (var item in backgroundnPanels)
         {
-            
-            item.GetComponent<MeshRenderer>().material.color = new Color(0.9f, 0.9f, 0.9f, 1);
+            item.GetComponent<Image>().color = new Color(0.9f, 0.9f, 0.9f, 1);
         }
     }
 
@@ -26,9 +23,9 @@ public class ImageManager : MonoBehaviour
 
         foreach (var item in backgroundnPanels)
         {
-            item.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1, 1);
+            item.GetComponent<Image>().color = new Color(1, 1, 1, 1);
         }
-        Debug.Log("color " + backgroundnPanels[1].GetComponent<MeshRenderer>().material.color.r);
+        Debug.Log("color " + backgroundnPanels[1].GetComponent<Image>().color.r);
     }
 
     public void RepeatPattern(GameObject pattern)

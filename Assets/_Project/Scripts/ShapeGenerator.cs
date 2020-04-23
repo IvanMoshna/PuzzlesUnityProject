@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ShapeGenerator : MonoBehaviour
 {
-    public PuzzleController puzzleController;
+ /*   public PuzzleController puzzleController;
 
 
     private bool isShaped;
@@ -29,13 +29,13 @@ public class ShapeGenerator : MonoBehaviour
     public void SetShape(List <GameObject> puzzles, params GameObject[] pieces)
     {
         GameObject mainParent = pieces[0].GetComponent<PuzzleItem>().imageBox;
-        pieces[0].GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0].GetComponent<Image>().raycastTarget = false;   
+        pieces[0].GetComponent<PuzzleItem>().images[0].GetComponent<Image>().raycastTarget = false;   
         
         for (int i = 1; i < pieces.Length; i++)
         {
-            GameObject child = pieces[i].GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0].gameObject;
+            GameObject child = pieces[i].GetComponent<PuzzleItem>().images[0].gameObject;
             child.transform.SetParent(mainParent.transform, true);
-            mainParent.GetComponent<ImageBox>().images.Add(child.GetComponent<Puzzle>());
+            mainParent.GetComponent<PuzzleItem>().images.Add(child.GetComponent<Puzzle>());
             child.GetComponent<Image>().raycastTarget = false;
             
             puzzles.Remove(pieces[i]);
@@ -86,7 +86,7 @@ public class ShapeGenerator : MonoBehaviour
             SetShape(puzzleController.puzzlePrefabs,puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1], puzzleController.puzzlePrefabs[6] );
             SetInContent(puzzleController.puzzlePrefabs, puzzleController.contentBox.transform);
         }
-    }
+    }*/
 }
     
     
