@@ -19,43 +19,17 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private bool isDraggable;
     private bool isFramed;
     private RectTransform rt;
-    private float startDragTime;
-    private float dragDelay;
-
-    private bool isClicked;
 
     private void Awake()
     {
         rt = GetComponent<RectTransform>();
-        isDraggable = false;
-        dragDelay=ToolBox.Get<SettingsGame>().DragDelay;
-    }
-
-    private void Update()
-    {
-        if (!isClicked)
-        {
-            //ScrollParent.GetComponent<ScrollRect>().
-        }
-        else
-        {
-            if (Time.time - startDragTime >= dragDelay)
-            {
-                StartDrag();
-                isClicked = false;
-            }
-        }
+        isDraggable = true;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        isClicked = true;
-        startDragTime = Time.time;
-    }
-
-    private void StartDrag()
-    {
         isFramed = true;
+        Debug.Log(puzzleController.checkedPuzzles);
         transform.SetParent(puzzleController.checkedPuzzles.transform, true);
         rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;
@@ -63,7 +37,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        isClicked = false;
         imageManager.FrameOff();
 
         if (Vector2.Distance(rt.anchoredPosition, puzzlePosition) < puzzleController.gameSettings.puzzleDistance)
