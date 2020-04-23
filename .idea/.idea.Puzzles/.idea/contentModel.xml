@@ -9,6 +9,7 @@
       <e p="Assets" t="Include">
         <e p="_Project" t="Include">
           <e p="Scripts" t="Include">
+            <e p="ImageManager.cs" t="Include" />
             <e p="Puzzle" t="Include">
               <e p="ImageBox.cs" t="Include" />
               <e p="Puzzle.cs" t="Include" />
@@ -65,7 +66,6 @@
             <e p="NumericalFormatter.cs" t="Include" />
           </e>
         </e>
-        <e p="ImageManager.cs" t="Include" />
         <e p="Packages" t="Include">
           <e p="SimpleLocalization" t="Include">
             <e p="Downloader.cs" t="Include" />

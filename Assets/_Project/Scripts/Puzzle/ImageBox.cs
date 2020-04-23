@@ -10,16 +10,15 @@ using Image = UnityEngine.UI.Image;
 
 public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    public List<Puzzle> images;
+    //public List<Puzzle> images;
+    public List<MeshRenderer> meshes;
     public PuzzleController puzzleController;
     public ScrollRect scrollRect;
-    public float holdTime = 0.5f;
     public float deltaY;
     public ImageManager imageManager;
     
     private bool isDraggable;
     private bool isFramed;
-    private EventSystem es;
     public void OnBeginDrag (PointerEventData eventData)
     {
         scrollRect.OnBeginDrag(eventData);
@@ -42,13 +41,14 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     public void OnPointerUp(PointerEventData eventData)
     {
         imageManager.FrameOff();
-        var puzzlePos = images[0].puzzlePos;
+        var puzzlePos = meshes[0].GetComponent<Puzzle>().puzzlePos;
         if (Vector2.Distance(gameObject.transform.position, puzzlePos) < puzzleController.gameSettings.puzzleDistance)
         {
             GameObject parentPuzzle = gameObject.transform.parent.gameObject;
             gameObject.GetComponentInParent<Image>().raycastTarget = false;
             gameObject.transform.position = puzzlePos;
             gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x, gameObject.transform.localPosition.y, -1);
+
 
             parentPuzzle.transform.SetParent(puzzleController.checkedPuzzles.transform);
             parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
@@ -78,7 +78,7 @@ public class ImageBox : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             gameObject.GetComponent<RectTransform>().anchoredPosition += eventData.delta;
             if (isFramed)
             {
-                Debug.Log("is Framed");
+                //Debug.Log("is Framed");
                 imageManager.FrameOn();
                 isFramed = false;
             }

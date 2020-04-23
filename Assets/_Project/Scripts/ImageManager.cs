@@ -12,7 +12,7 @@ public class ImageManager : MonoBehaviour
 
     public void FrameOn()
     {
-        Debug.Log("FrameON");
+        //Debug.Log("FrameON");
         foreach (var item in backgroundnPanels)
         {
             
@@ -22,20 +22,12 @@ public class ImageManager : MonoBehaviour
 
     public void FrameOff()
     {
-        Debug.Log("FrameOFF");
-
+        //Debug.Log("FrameOFF");
         foreach (var item in backgroundnPanels)
         {
             item.GetComponent<MeshRenderer>().material.color = new Color(1, 1, 1, 1);
         }
-        Debug.Log("color " + backgroundnPanels[1].GetComponent<MeshRenderer>().material.color.r);
+        //Debug.Log("color " + backgroundnPanels[1].GetComponent<MeshRenderer>().material.color.r);
     }
-
-    public void RepeatPattern(GameObject pattern)
-    {
-        foreach (var bp in backgroundnPanels)
-        {
-            
-        }
-    }
+    
 }

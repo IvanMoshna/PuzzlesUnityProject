@@ -24,9 +24,11 @@ public class ShapeGenerator : MonoBehaviour
         {
             gameObjects[i].transform.position = finalPositions[i];
         }
+
+        isShaped = true;
     }
     
-    public void SetShape(List <GameObject> puzzles, params GameObject[] pieces)
+    /*public void SetShape(List <GameObject> puzzles, params GameObject[] pieces)
     {
         GameObject mainParent = pieces[0].GetComponent<PuzzleItem>().imageBox;
         pieces[0].GetComponent<PuzzleItem>().imageBox.GetComponent<ImageBox>().images[0].GetComponent<Image>().raycastTarget = false;   
@@ -65,7 +67,7 @@ public class ShapeGenerator : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
     
     void SetInContent(List<GameObject> gameObjects, Transform content)
     {
@@ -82,8 +84,9 @@ public class ShapeGenerator : MonoBehaviour
     {
         if (puzzleController.isGenerated && !isShaped && !isInContent)
         { 
+            Debug.Log("UPDATE");
             SetFinalPositions(puzzleController.puzzlePrefabs, puzzleController.puzzlePos);
-            SetShape(puzzleController.puzzlePrefabs,puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1], puzzleController.puzzlePrefabs[6] );
+            //SetShape(puzzleController.puzzlePrefabs,puzzleController.puzzlePrefabs[0], puzzleController.puzzlePrefabs[1], puzzleController.puzzlePrefabs[6] );
             SetInContent(puzzleController.puzzlePrefabs, puzzleController.contentBox.transform);
         }
     }
