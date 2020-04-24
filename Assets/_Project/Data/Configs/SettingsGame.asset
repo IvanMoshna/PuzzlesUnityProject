@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SettingsGame
   m_EditorClassIdentifier: 
   puzzleDistance: 100
-  columns: 8
-  lines: 8
+  columns: 10
+  lines: 10
   DragDelay: 0.2
   DragDelta: 10

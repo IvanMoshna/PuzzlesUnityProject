@@ -68,7 +68,7 @@ public class ShapeGenerator : MonoBehaviour
             }
         }
     }*/
-    
+    /*
     void SetInContent(List<GameObject> gameObjects, Transform content)
     {
         
