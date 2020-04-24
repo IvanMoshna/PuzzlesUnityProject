@@ -7,7 +7,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IEndDragHandler
+public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IEndDragHandler,
+    IBeginDragHandler
 {
     public GameObject backgroundImage;
 
@@ -15,33 +16,71 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public GameObject ScrollParent;
     public ImageManager imageManager;
     public Vector2 puzzlePosition;
+    
+    public ScrollRect scrollRect;
 
     private bool isDraggable;
     private bool isFramed;
     private RectTransform rt;
+    private float startDragTime;
+    private float dragDelay;
+    private float dragDelta;
 
-    private void Awake()
+    private bool isClicked;
+    private Vector2 clickPosition;
+    private bool movedAway;
+    private SettingsGame settingsGame;
+
+    private void Start()
     {
         rt = GetComponent<RectTransform>();
-        isDraggable = true;
+        settingsGame = ToolBox.Get<SettingsGame>();
+        dragDelay = settingsGame.DragDelay;
+        dragDelta = settingsGame.DragDelta;
+        isDraggable = false;
+        scrollRect = puzzleController.scrollView.GetComponent<ScrollRect>();
+        transform.localScale=Vector3.one;
+    }
+
+    private void Update()
+    {
+        if (isClicked && !movedAway && Time.time - startDragTime > dragDelay)
+        {
+            StartDrag();
+        }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        scrollRect.OnBeginDrag(eventData);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        isClicked = true;
+        movedAway = false;
+        startDragTime = Time.time;
+        clickPosition = eventData.position;
+    }
+
+    private void StartDrag()
+    {
+        isClicked = false;
+        isDraggable = true;
         isFramed = true;
-        Debug.Log(puzzleController.checkedPuzzles);
-        transform.SetParent(puzzleController.checkedPuzzles.transform, true);
+        transform.SetParent(puzzleController.DragParent, true);
         rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        isClicked = false;
         imageManager.FrameOff();
 
-        if (Vector2.Distance(rt.anchoredPosition, puzzlePosition) < puzzleController.gameSettings.puzzleDistance)
+        if (Vector2.Distance(rt.anchoredPosition, puzzlePosition) < settingsGame.puzzleDistance)
         {
-            transform.SetParent(puzzleController.checkedPuzzles.transform);
+            transform.SetParent(puzzleController.DragParent);
             rt.anchoredPosition = puzzlePosition;
             //  parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
 
@@ -60,23 +99,35 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             transform.SetParent(ScrollParent.transform, false);
         }
 
-        puzzleController.SetPrefferedContentSize();
+        puzzleController.SetPreferedContentSize();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isDraggable) return;
-
-        transform.position = eventData.position;
-        if (isFramed)
+        if (!isDraggable && !movedAway && Time.time - startDragTime <= dragDelay &&
+            Vector2.Distance(clickPosition, eventData.position) > dragDelta)
         {
-            imageManager.FrameOn();
-            isFramed = false;
+            movedAway = true;
+        }
+
+        if (!isDraggable)
+        {
+            scrollRect.OnDrag(eventData);
+        }
+        else
+        {
+            transform.position = eventData.position;
+            if (isFramed)
+            {
+                imageManager.FrameOn();
+                isFramed = false;
+            }
         }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        scrollRect.OnEndDrag(eventData);
         isFramed = false;
     }
 }

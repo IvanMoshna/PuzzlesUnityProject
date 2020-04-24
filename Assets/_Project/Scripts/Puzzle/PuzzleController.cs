@@ -13,30 +13,28 @@ using Image = UnityEngine.UI.Image;
 
 public class PuzzleController : MonoBehaviour
 {
-    public Image originalPuzzle; //с него генерим пазлы
-    public GameObject puzzleBW;
-    public GameObject checkedPuzzles;
-    public List<GameObject> puzzlePrefabs = new List<GameObject>();
+    public Image originalImage; //с него генерим пазлы
+    public Image puzzleBW;
+    public Transform DragParent;
+
+    [Space]
     public GameObject puzzlePrefab;
-    public SettingsGame gameSettings;
-    public bool isGenerated;
-    public GameObject contentBox;
+    public GameObject PuzzleElementPrefab;
+    
+    [Space]
+    public ImageManager imageManager;
+    
+    
+    [Space]
     public GameObject scrollView;
     public GameObject scrollViewContent;
-    public ImageManager imageManager;
-    public GameObject PuzzleElementPrefab;
 
-    private int sortingOrder;
-    public List<Vector3> puzzlePos = new List<Vector3>();
-    private Transform current;
-    private Vector3 offset;
+    private SettingsGame gameSettings;
     private bool isWin;
 
     void NewGame()
     {
-        isGenerated = false;
-        originalPuzzle.gameObject.SetActive(true);
-        puzzleBW.SetActive(false);
+        originalImage.gameObject.SetActive(true);
         Clear();
         Generate();
     }
@@ -48,12 +46,11 @@ public class PuzzleController : MonoBehaviour
         {
             Destroy(child.gameObject);
         }*/
-        puzzlePos = new List<Vector3>();
     }
 
     private void Generate() //создание пазлов/нарезка текстуры
     {
-        Texture2D mainTexture = originalPuzzle.mainTexture as Texture2D;
+        Texture2D mainTexture = originalImage.mainTexture as Texture2D;
         // определяем размеры пазла
         int w_cell = mainTexture.width / gameSettings.columns;
         int h_cell = mainTexture.height / gameSettings.lines;
@@ -89,6 +86,7 @@ public class PuzzleController : MonoBehaviour
                 Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
 
                 GameObject newPuzzle = Instantiate(PuzzleElementPrefab, blockParent.transform);
+                //this.NextFrame(()=>newPuzzle.transform.localScale=Vector3.one);
                 newPuzzle.GetComponent<Image>().sprite = sprite;
                 newPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2(w_cell, h_cell);
                 newPuzzle.GetComponent<RectTransform>().anchoredPosition =
@@ -97,27 +95,23 @@ public class PuzzleController : MonoBehaviour
                 puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
             }
 
-            puzzlePrefabs.Add(blockParent);
+            //puzzlePrefabs.Add(blockParent);
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             blockParent.transform.SetParent(scrollViewContent.transform);
         }
 
 
-        this.NextFrame(() => SetPrefferedContentSize());
-        isGenerated = true;
-        originalPuzzle.gameObject.SetActive(false);
-        puzzleBW.SetActive(true);
+        this.NextFrame(() => SetPreferedContentSize());
+        originalImage.gameObject.SetActive(false);
     }
 
-    public void SetPrefferedContentSize()
+    public void SetPreferedContentSize()
     {
-        scrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(
-            scrollViewContent.GetComponent<HorizontalLayoutGroup>().preferredWidth,
-            scrollViewContent.GetComponent<HorizontalLayoutGroup>().preferredHeight);
-        scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(
-            0f,
-            scrollViewContent.GetComponent<HorizontalLayoutGroup>().preferredHeight);
+        var layoutGroup = scrollViewContent.GetComponent<HorizontalLayoutGroup>();
+        scrollViewContent.GetComponent<RectTransform>().sizeDelta =
+            new Vector2(layoutGroup.preferredWidth, layoutGroup.preferredHeight);
+        scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, layoutGroup.preferredHeight);
     }
 
     private void Start()

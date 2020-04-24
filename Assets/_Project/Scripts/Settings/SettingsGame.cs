@@ -12,5 +12,6 @@ namespace Puzzles.Settings
         public int columns;
         public int lines;
         public float DragDelay;
+        public float DragDelta;
     }
 }

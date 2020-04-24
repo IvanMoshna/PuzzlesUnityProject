@@ -212,3 +212,5 @@ MonoBehaviour:
   ScrollParent: {fileID: 0}
   imageManager: {fileID: 0}
   puzzlePosition: {x: 0, y: 0}
+  DragDelta: 10
+  scrollRect: {fileID: 0}
