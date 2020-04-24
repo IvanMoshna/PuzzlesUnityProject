@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c47a646aaf28ee4f9ca88a4a931f944, type: 3}
   m_Name: SettingsGame
   m_EditorClassIdentifier: 
-  puzzleDistance: 0.5
-  columns: 5
-  lines: 5
+  puzzleDistance: 100
+  columns: 8
+  lines: 8
+  DragDelay: 0.2
+  DragDelta: 10
