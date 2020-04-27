@@ -15,5 +15,5 @@ MonoBehaviour:
   puzzleDistance: 100
   columns: 8
   lines: 8
-  DragDelay: 0
+  DragDelay: 0.1
   DragDelta: 10

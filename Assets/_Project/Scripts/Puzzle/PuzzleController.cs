@@ -115,6 +115,7 @@ public class PuzzleController : MonoBehaviour
             //this.NextFrame(()=>newPuzzle.transform.localScale=Vector3.one);
             newPuzzle.GetComponent<Image>().sprite = sprite;
             newPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
+                //newPuzzle.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
                 //newPuzzle.GetComponent<RectTransform>().anchoredPosition = new Vector2((elementPosition.x - minX) * w_cell, (elementPosition.y - minY) * h_cell);
             //newPuzzle.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 

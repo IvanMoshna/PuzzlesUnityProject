@@ -32,11 +32,13 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private Vector2 clickPosition;
     private bool movedAway;
     private SettingsGame settingsGame;
+    private Vector2 offsetToCenter;
 
     private void Start()
     {
         //rt = GetComponent<RectTransform>();
         rt = puzzleImage.GetComponent<RectTransform>();
+        offsetToCenter = new Vector2(puzzleImage.GetComponent<RectTransform>().sizeDelta.x/2, puzzleImage.GetComponent<RectTransform>().sizeDelta.y/2);
         settingsGame = ToolBox.Get<SettingsGame>();
         dragDelay = settingsGame.DragDelay;
         dragDelta = settingsGame.DragDelta;
@@ -73,8 +75,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         isFramed = true;
         //transform.SetParent(puzzleController.DragParent, true);
         puzzleImage.transform.SetParent(puzzleController.DragParent, true);
-        rt.anchorMax = Vector2.zero;
-        rt.anchorMin = Vector2.zero;
+        /*rt.anchorMax = Vector2.zero;
+        rt.anchorMin = Vector2.zero;*/
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -87,9 +89,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         
         if (Vector2.Distance(rt.anchoredPosition, puzzlePosition) < settingsGame.puzzleDistance)
         {
-            Debug.Log("БУМ");
-            //transform.SetParent(puzzleController.DragParent);
-            
             puzzleImage.transform.localPosition = puzzlePosition;
             rt.anchoredPosition = puzzlePosition;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
@@ -118,7 +117,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isDraggable && !movedAway && Time.time - startDragTime <= dragDelay &&
+        if (!isDraggable /*&& !movedAway && Time.time - startDragTime <= dragDelay*/ &&
             Vector2.Distance(clickPosition, eventData.position) > dragDelta)
         {
             movedAway = true;
@@ -131,13 +130,14 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         else
         {
             //transform.position = eventData.position;
-            puzzleImage.transform.position = eventData.position;
+            puzzleImage.transform.position = eventData.position-offsetToCenter;
             if (isFramed)
             {
                 imageManager.FrameOn();
                 isFramed = false;
             }
         }
+       
     }
 
     public void OnEndDrag(PointerEventData eventData)
