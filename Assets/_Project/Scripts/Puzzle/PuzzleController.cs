@@ -14,7 +14,7 @@ using Image = UnityEngine.UI.Image;
 public class PuzzleController : MonoBehaviour
 {
     public Image originalImage; //с него генерим пазлы
-    public Image puzzleBW;
+    public Image backgroundImage;
     public Transform DragParent;
 
     [Space]
@@ -51,6 +51,7 @@ public class PuzzleController : MonoBehaviour
     private void Generate() //создание пазлов/нарезка текстуры
     {
         Texture2D mainTexture = originalImage.mainTexture as Texture2D;
+        Texture2D backgroundTexture = backgroundImage.mainTexture as Texture2D;
         // определяем размеры пазла
         int w_cell = mainTexture.width / gameSettings.columns;
         int h_cell = mainTexture.height / gameSettings.lines;
@@ -78,30 +79,39 @@ public class PuzzleController : MonoBehaviour
             
             
             Texture2D tex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
-            var pixel = tex.GetPixels();
-            for (var index = 0; index < pixel.Length; index++)
+            Texture2D backgroungTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
+            
+            var clearPixels = tex.GetPixels();
+            var bp = backgroungTex.GetPixels();
+            for (var index = 0; index < clearPixels.Length; index++)
             { 
-                pixel[index] = Color.clear;
+                clearPixels[index] = Color.clear;
+                bp[index] = Color.clear;
             }
-            tex.SetPixels(pixel);
+            tex.SetPixels(clearPixels);
+            backgroungTex.SetPixels(bp);
             tex.Apply();
+            backgroungTex.Apply();
+            
+            
+            
             foreach (var elementPosition in block)
             {
                 var pixels = mainTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
                     h_cell, w_cell);
+                var backgroundPixels = backgroundTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
+                    h_cell, w_cell);
                 tex.SetPixels((int)(elementPosition.x-minX)*w_cell, (int)(elementPosition.y - minY)*h_cell, h_cell, w_cell, pixels);
-                
-                //tex.SetPixels(mainTexture.GetPixels((int)(elementPosition.x-minX+1)*w_cell, (int)(elementPosition.y - minY+1)*h_cell, h_cell, w_cell));
-
-                Debug.Log("x " + (int)(elementPosition.x-minX)*w_cell);
-                Debug.Log("y " +(int)(elementPosition.y - minY)*h_cell);
+                backgroungTex.SetPixels((int)(elementPosition.x-minX)*w_cell, (int)(elementPosition.y - minY)*h_cell, h_cell, w_cell, backgroundPixels);
             }
             tex.Apply();
+            backgroungTex.Apply();
+            
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
-            Debug.Log("tex.w = " + tex.width);
-            Debug.Log("tex.h = " + tex.height);
+            Sprite bgSprite = Sprite.Create(backgroungTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
 
             GameObject newPuzzle = Instantiate(PuzzleElementPrefab, blockParent.transform);
+            puzzleBlock.puzzleImage = newPuzzle;
             //this.NextFrame(()=>newPuzzle.transform.localScale=Vector3.one);
             newPuzzle.GetComponent<Image>().sprite = sprite;
             newPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
@@ -110,6 +120,12 @@ public class PuzzleController : MonoBehaviour
 
             puzzleBlock.puzzleController = this;
             puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
+            
+
+
+            puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().sprite = bgSprite;
+            puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
+            
             
             //puzzlePrefabs.Add(blockParent);
             blockParent.GetComponent<RectTransform>().sizeDelta =

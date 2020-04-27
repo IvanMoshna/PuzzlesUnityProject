@@ -10,12 +10,14 @@ using UnityEngine.UI;
 public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IEndDragHandler,
     IBeginDragHandler
 {
-    public GameObject backgroundImage;
 
     public PuzzleController puzzleController;
     public GameObject ScrollParent;
     public ImageManager imageManager;
     public Vector2 puzzlePosition;
+    public GameObject puzzleImage;
+    public GameObject backgroundImage;
+
     
     public ScrollRect scrollRect;
 
@@ -33,7 +35,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     private void Start()
     {
-        rt = GetComponent<RectTransform>();
+        //rt = GetComponent<RectTransform>();
+        rt = puzzleImage.GetComponent<RectTransform>();
         settingsGame = ToolBox.Get<SettingsGame>();
         dragDelay = settingsGame.DragDelay;
         dragDelta = settingsGame.DragDelta;
@@ -68,7 +71,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         isClicked = false;
         isDraggable = true;
         isFramed = true;
-        transform.SetParent(puzzleController.DragParent, true);
+        //transform.SetParent(puzzleController.DragParent, true);
+        puzzleImage.transform.SetParent(puzzleController.DragParent, true);
         rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;
     }
@@ -78,11 +82,20 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         isClicked = false;
         imageManager.FrameOff();
 
+        //rt.anchoredPosition
+        Debug.Log("Distance = " + Vector2.Distance(puzzleImage.GetComponent<RectTransform>().position, puzzlePosition));
+        
         if (Vector2.Distance(rt.anchoredPosition, puzzlePosition) < settingsGame.puzzleDistance)
         {
-            transform.SetParent(puzzleController.DragParent);
+            Debug.Log("БУМ");
+            //transform.SetParent(puzzleController.DragParent);
+            
+            puzzleImage.transform.localPosition = puzzlePosition;
             rt.anchoredPosition = puzzlePosition;
-            //  parentPuzzle.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().enabled = false;
+            puzzleImage.GetComponent<Image>().raycastTarget = false;
+            backgroundImage.SetActive(false);
+            transform.SetParent(puzzleController.DragParent, true);
+            puzzleImage.transform.SetParent(this.transform,true);
 
             //repeat pattern
             foreach (var bg in imageManager.backgroundnPanels)
@@ -96,7 +109,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
-            transform.SetParent(ScrollParent.transform, false);
+            puzzleImage.transform.SetParent(this.transform,true);
+            puzzleImage.transform.localPosition = Vector3.zero;
         }
 
         puzzleController.SetPreferedContentSize();
@@ -116,7 +130,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
-            transform.position = eventData.position;
+            //transform.position = eventData.position;
+            puzzleImage.transform.position = eventData.position;
             if (isFramed)
             {
                 imageManager.FrameOn();
