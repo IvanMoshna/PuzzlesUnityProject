@@ -17,6 +17,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public Vector2 puzzlePosition;
     public GameObject puzzleImage;
     public GameObject backgroundImage;
+    public GameObject gridImage;
 
     
     public ScrollRect scrollRect;

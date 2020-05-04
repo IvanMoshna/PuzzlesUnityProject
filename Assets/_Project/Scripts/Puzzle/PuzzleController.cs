@@ -15,6 +15,7 @@ public class PuzzleController : MonoBehaviour
 {
     public Image originalImage; //с него генерим пазлы
     public Image backgroundImage;
+    public Image gridImage;
     public Transform DragParent;
 
     [Space]
@@ -52,6 +53,16 @@ public class PuzzleController : MonoBehaviour
     {
         Texture2D mainTexture = originalImage.mainTexture as Texture2D;
         Texture2D backgroundTexture = backgroundImage.mainTexture as Texture2D;
+        Texture2D gridTexture = gridImage.mainTexture as Texture2D;
+        /*var gridPixels = gridTexture.GetPixels();
+        for (int i = 0; i < gridPixels.Length; i++)
+        {
+            gridPixels[i] = Color.gray;
+        }
+        gridTexture.SetPixels(gridPixels);
+        gridTexture.Apply();
+        Sprite gridSprite = Sprite.Create(gridTexture, new Rect(0,0, gridTexture.width, gridTexture.height), new Vector2(.5f, .5f));*/
+
         // определяем размеры пазла
         int w_cell = mainTexture.width / gameSettings.columns;
         int h_cell = mainTexture.height / gameSettings.lines;
@@ -79,19 +90,24 @@ public class PuzzleController : MonoBehaviour
             
             
             Texture2D tex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
-            Texture2D backgroungTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
+            Texture2D backgroundTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
+            Texture2D gridTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
             
             var clearPixels = tex.GetPixels();
-            var bp = backgroungTex.GetPixels();
+            var bp = backgroundTex.GetPixels();
+            var gp = gridTex.GetPixels();
             for (var index = 0; index < clearPixels.Length; index++)
             { 
                 clearPixels[index] = Color.clear;
                 bp[index] = Color.clear;
+                gp[index] = Color.clear;
             }
             tex.SetPixels(clearPixels);
-            backgroungTex.SetPixels(bp);
+            backgroundTex.SetPixels(bp);
+            gridTex.SetPixels(gp);
             tex.Apply();
-            backgroungTex.Apply();
+            backgroundTex.Apply();
+            gridTex.Apply();
             
             
             
@@ -101,14 +117,19 @@ public class PuzzleController : MonoBehaviour
                     h_cell, w_cell);
                 var backgroundPixels = backgroundTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
                     h_cell, w_cell);
+                var gridPixels = gridTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
+                    h_cell, w_cell);
                 tex.SetPixels((int)(elementPosition.x-minX)*w_cell, (int)(elementPosition.y - minY)*h_cell, h_cell, w_cell, pixels);
-                backgroungTex.SetPixels((int)(elementPosition.x-minX)*w_cell, (int)(elementPosition.y - minY)*h_cell, h_cell, w_cell, backgroundPixels);
+                backgroundTex.SetPixels((int)(elementPosition.x-minX)*w_cell, (int)(elementPosition.y - minY)*h_cell, h_cell, w_cell, backgroundPixels);
+                gridTex.SetPixels((int)(elementPosition.x-minX)*w_cell, (int)(elementPosition.y - minY)*h_cell, h_cell, w_cell, gridPixels);
             }
             tex.Apply();
-            backgroungTex.Apply();
+            backgroundTex.Apply();
+            gridTex.Apply();
             
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
-            Sprite bgSprite = Sprite.Create(backgroungTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
+            Sprite bgSprite = Sprite.Create(backgroundTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
+            Sprite gridSprite = Sprite.Create(gridTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
 
             GameObject newPuzzle = Instantiate(PuzzleElementPrefab, blockParent.transform);
             puzzleBlock.puzzleImage = newPuzzle;
@@ -126,7 +147,9 @@ public class PuzzleController : MonoBehaviour
 
             puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().sprite = bgSprite;
             puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-            
+
+            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<Image>().sprite = gridSprite;
+            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             
             //puzzlePrefabs.Add(blockParent);
             blockParent.GetComponent<RectTransform>().sizeDelta =
