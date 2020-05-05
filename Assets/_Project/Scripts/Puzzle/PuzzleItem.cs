@@ -24,7 +24,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     private bool isDraggable;
     private bool isFramed;
-    private RectTransform rt;
+    private RectTransform rtPuzzleImage;
     private float startDragTime;
     private float dragDelay;
     private float dragDelta;
@@ -39,7 +39,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private void Start()
     {
         //rt = GetComponent<RectTransform>();
-        rt = puzzleImage.GetComponent<RectTransform>();
+        rtPuzzleImage = puzzleImage.GetComponent<RectTransform>();
         offsetToCenter = new Vector2(puzzleImage.GetComponent<RectTransform>().sizeDelta.x/2, puzzleImage.GetComponent<RectTransform>().sizeDelta.y/2);
         offsetToShadow = new Vector2(puzzleController.wCell, puzzleController.hCell);
         settingsGame = ToolBox.Get<SettingsGame>();
@@ -77,6 +77,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         isDraggable = true;
         isFramed = true;
         //transform.SetParent(puzzleController.DragParent, true);
+        gridImage.transform.SetParent(puzzleController.DragParent, true);
         puzzleImage.transform.SetParent(puzzleController.DragParent, true);
         /*rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;*/
@@ -90,10 +91,10 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         //rt.anchoredPosition
         Debug.Log("Distance = " + Vector2.Distance(puzzleImage.GetComponent<RectTransform>().position, puzzlePosition));
         
-        if (Vector2.Distance(rt.anchoredPosition, puzzlePosition) < settingsGame.puzzleDistance)
+        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzzlePosition) < settingsGame.puzzleDistance)
         {
             puzzleImage.transform.localPosition = puzzlePosition;
-            rt.anchoredPosition = puzzlePosition;
+            rtPuzzleImage.anchoredPosition = puzzlePosition;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
             gridImage.SetActive(false);
@@ -112,9 +113,11 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
+            gridImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.localPosition = Vector3.zero;
             gridImage.transform.localPosition = Vector3.zero;
+            
         }
 
         puzzleController.SetPreferedContentSize();
@@ -135,7 +138,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         else
         {
             puzzleImage.transform.position = eventData.position-offsetToCenter;
-            SetPuzzlePosOnGridImage(puzzleImage, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
+            SetPuzzlePosOnGridImage(rtPuzzleImage.anchoredPosition, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
 
             if (isFramed)
             {
@@ -146,15 +149,15 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
        
     }
 
-    public void SetPuzzlePosOnGridImage(GameObject puzzle, GameObject gridImage, List<Vector2> puzzlePozList)
+    public void SetPuzzlePosOnGridImage(Vector2 puzzle, GameObject gridImage, List<Vector2> puzzlePozList)
     {
         float nearestPos=1000f;
         foreach (var pos in puzzlePozList)
         {
-            if (Vector2.Distance(puzzle.transform.position, pos) < nearestPos)
+            if (Vector2.Distance(puzzle, pos) < nearestPos)
             {
-                nearestPos = Vector2.Distance(puzzle.transform.position, pos);
-                gridImage.transform.position = pos;
+                nearestPos = Vector2.Distance(puzzle, pos);
+                gridImage.GetComponent<RectTransform>().anchoredPosition = pos;
             }
         }
         

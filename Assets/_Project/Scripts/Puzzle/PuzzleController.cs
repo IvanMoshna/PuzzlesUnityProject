@@ -120,6 +120,7 @@ public class PuzzleController : MonoBehaviour
             
             foreach (var elementPosition in block)
             {
+                
                 var pixels = mainTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
                     h_cell, w_cell);
                 var backgroundPixels = backgroundTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
@@ -150,14 +151,17 @@ public class PuzzleController : MonoBehaviour
             puzzleBlock.puzzleController = this;
             puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
 
-
-            puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().sprite = bgSprite;
-            puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-
-            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<Image>().sprite = gridSprite;
-            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<Image>().color = new Color(1,1,1,gameSettings.transparency);
-            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<PuzzleShadow>().puzzleController = this;
+            
+            var puzzleItem = puzzleBlock.GetComponent<PuzzleItem>();
+            puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
+            puzzleItem.backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
+            
+          
+            var puzzleItemGridImage = puzzleItem.gridImage;
+            puzzleItemGridImage.GetComponent<Image>().sprite = gridSprite;
+            puzzleItemGridImage.GetComponent<Image>().color = new Color(1,1,1,gameSettings.transparency);
+            puzzleItemGridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
+            puzzleItemGridImage.GetComponent<PuzzleShadow>().puzzleController = this;
             
             
             blockParent.GetComponent<RectTransform>().sizeDelta =
