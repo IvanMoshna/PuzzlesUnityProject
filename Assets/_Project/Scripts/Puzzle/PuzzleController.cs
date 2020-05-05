@@ -24,11 +24,12 @@ public class PuzzleController : MonoBehaviour
     
     [Space]
     public ImageManager imageManager;
-    
-    
+
+
     [Space]
     public GameObject scrollView;
     public GameObject scrollViewContent;
+    public Canvas canvas;
 
     [Space] 
     public int wCell;
@@ -155,6 +156,7 @@ public class PuzzleController : MonoBehaviour
             var puzzleItem = puzzleBlock.GetComponent<PuzzleItem>();
             puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
             puzzleItem.backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
+            puzzleItem.canvas = this.canvas;
             
           
             var puzzleItemGridImage = puzzleItem.gridImage;

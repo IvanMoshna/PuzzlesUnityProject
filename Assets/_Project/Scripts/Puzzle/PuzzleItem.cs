@@ -21,6 +21,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     
     public ScrollRect scrollRect;
+    public Canvas canvas;
 
     private bool isDraggable;
     private bool isFramed;
@@ -40,7 +41,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     {
         //rt = GetComponent<RectTransform>();
         rtPuzzleImage = puzzleImage.GetComponent<RectTransform>();
-        offsetToCenter = new Vector2(puzzleImage.GetComponent<RectTransform>().sizeDelta.x/2, puzzleImage.GetComponent<RectTransform>().sizeDelta.y/2);
+        //offsetToCenter = new Vector2(puzzleImage.GetComponent<RectTransform>().sizeDelta.x/2, puzzleImage.GetComponent<RectTransform>().sizeDelta.y/2);
         offsetToShadow = new Vector2(puzzleController.wCell, puzzleController.hCell);
         settingsGame = ToolBox.Get<SettingsGame>();
         dragDelay = settingsGame.DragDelay;
@@ -69,10 +70,15 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         movedAway = false;
         startDragTime = Time.time;
         clickPosition = eventData.position;
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtPuzzleImage, eventData.position, null, out localPoint);
+        Debug.Log("localpoint = " + localPoint);
+        offsetToCenter = localPoint;
     }
 
     private void StartDrag()
     {
+       
         isClicked = false;
         isDraggable = true;
         isFramed = true;
@@ -137,7 +143,13 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
+          
+
+            
+            
             puzzleImage.transform.position = eventData.position-offsetToCenter;
+                
+                
             SetPuzzlePosOnGridImage(rtPuzzleImage.anchoredPosition, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
 
             if (isFramed)

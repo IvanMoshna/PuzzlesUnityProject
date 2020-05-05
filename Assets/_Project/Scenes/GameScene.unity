@@ -2150,5 +2150,6 @@ MonoBehaviour:
   imageManager: {fileID: 209219346}
   scrollView: {fileID: 1276928537}
   scrollViewContent: {fileID: 1854533633}
+  canvas: {fileID: 336406862}
   wCell: 0
   hCell: 0
