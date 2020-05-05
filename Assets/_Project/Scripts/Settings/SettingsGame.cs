@@ -11,7 +11,10 @@ namespace Puzzles.Settings
         public float puzzleDistance;
         public int columns;
         public int lines;
+        public float transparency;
         public float DragDelay;
         public float DragDelta;
+        public bool isShuffled;
+
     }
 }

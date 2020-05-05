@@ -34,12 +34,14 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private bool movedAway;
     private SettingsGame settingsGame;
     private Vector2 offsetToCenter;
+    private Vector2 offsetToShadow;
 
     private void Start()
     {
         //rt = GetComponent<RectTransform>();
         rt = puzzleImage.GetComponent<RectTransform>();
         offsetToCenter = new Vector2(puzzleImage.GetComponent<RectTransform>().sizeDelta.x/2, puzzleImage.GetComponent<RectTransform>().sizeDelta.y/2);
+        offsetToShadow = new Vector2(puzzleController.wCell, puzzleController.hCell);
         settingsGame = ToolBox.Get<SettingsGame>();
         dragDelay = settingsGame.DragDelay;
         dragDelta = settingsGame.DragDelta;
@@ -94,6 +96,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             rt.anchoredPosition = puzzlePosition;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
+            gridImage.SetActive(false);
             transform.SetParent(puzzleController.DragParent, true);
             puzzleImage.transform.SetParent(this.transform,true);
 
@@ -111,6 +114,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         {
             puzzleImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.localPosition = Vector3.zero;
+            gridImage.transform.localPosition = Vector3.zero;
         }
 
         puzzleController.SetPreferedContentSize();
@@ -130,8 +134,9 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
-            //transform.position = eventData.position;
             puzzleImage.transform.position = eventData.position-offsetToCenter;
+            SetPuzzlePosOnGridImage(puzzleImage, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
+
             if (isFramed)
             {
                 imageManager.FrameOn();
@@ -139,6 +144,20 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             }
         }
        
+    }
+
+    public void SetPuzzlePosOnGridImage(GameObject puzzle, GameObject gridImage, List<Vector2> puzzlePozList)
+    {
+        float nearestPos=1000f;
+        foreach (var pos in puzzlePozList)
+        {
+            if (Vector2.Distance(puzzle.transform.position, pos) < nearestPos)
+            {
+                nearestPos = Vector2.Distance(puzzle.transform.position, pos);
+                gridImage.transform.position = pos;
+            }
+        }
+        
     }
 
     public void OnEndDrag(PointerEventData eventData)

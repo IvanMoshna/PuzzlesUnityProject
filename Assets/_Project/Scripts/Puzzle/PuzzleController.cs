@@ -30,8 +30,13 @@ public class PuzzleController : MonoBehaviour
     public GameObject scrollView;
     public GameObject scrollViewContent;
 
+    [Space] 
+    public int wCell;
+    public int hCell;
+
     private SettingsGame gameSettings;
     private bool isWin;
+   
 
     void NewGame()
     {
@@ -67,6 +72,8 @@ public class PuzzleController : MonoBehaviour
         int w_cell = mainTexture.width / gameSettings.columns;
         int h_cell = mainTexture.height / gameSettings.lines;
 
+        wCell = w_cell;
+        hCell = h_cell;
         List<List<Vector2>> puzzle = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
 
         foreach (var block in puzzle)
@@ -142,16 +149,17 @@ public class PuzzleController : MonoBehaviour
 
             puzzleBlock.puzzleController = this;
             puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
-            
 
 
             puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<Image>().sprite = bgSprite;
             puzzleBlock.GetComponent<PuzzleItem>().backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
 
             puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<Image>().sprite = gridSprite;
+            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<Image>().color = new Color(1,1,1,gameSettings.transparency);
             puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
+            puzzleBlock.GetComponent<PuzzleItem>().gridImage.GetComponent<PuzzleShadow>().puzzleController = this;
             
-            //puzzlePrefabs.Add(blockParent);
+            
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             blockParent.transform.SetParent(scrollViewContent.transform);

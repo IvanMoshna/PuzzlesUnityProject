@@ -15,6 +15,7 @@
               <e p="PuzzleController.cs" t="Include" />
               <e p="PuzzleItem.cs" t="Include" />
               <e p="PuzzlesCreator.cs" t="Include" />
+              <e p="PuzzleShadow.cs" t="Include" />
             </e>
             <e p="Settings" t="Include">
               <e p="SettingsGame.cs" t="Include" />

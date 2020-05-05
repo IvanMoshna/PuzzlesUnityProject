@@ -1969,7 +1969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b6998c58eab037a4e9187f9b6754e05f, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2150,3 +2150,5 @@ MonoBehaviour:
   imageManager: {fileID: 209219346}
   scrollView: {fileID: 1276928537}
   scrollViewContent: {fileID: 1854533633}
+  wCell: 0
+  hCell: 0
