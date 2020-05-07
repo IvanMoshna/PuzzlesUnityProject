@@ -8,8 +8,9 @@ using Random = UnityEngine.Random;
 public class PuzzlesCreator : MonoBehaviour
 {
 
-    public static List<List<Vector2>> CreatePuzzle(int height, int width)
-    {
+    public static List<PuzzleData> CreatePuzzle(int height, int width)
+    {//    public static List<List<Vector2>> CreatePuzzle(int height, int width)
+
         int[][] cells;
         cells = new int[width][];
         for (int i = 0; i < width; i++)
@@ -17,7 +18,7 @@ public class PuzzlesCreator : MonoBehaviour
             cells[i] = new int[height];
         }
 
-        List<List<Vector2>> createdPuzzles=new List<List<Vector2>>();
+        List<PuzzleData> createdPuzzles=new List<PuzzleData>();
 
         int counter = 1;
 
@@ -30,9 +31,11 @@ public class PuzzlesCreator : MonoBehaviour
                 cells[i][j] = counter;
                 int cellsCreated = 1;
                 int cellsCount = Random.Range(2, 5);
-                List<Vector2> blockCells = new List<Vector2>();
+                //List<Vector2> blockCells = new List<Vector2>();
+                PuzzleData blockCells = new PuzzleData();
+                //var blockCells = bCells.puzzleData;
                 List<Vector2> blockCellsCanCreateFrom = new List<Vector2>();
-                blockCells.Add(new Vector2(i, j));
+                blockCells.puzzleData.Add(new Vector2(i, j));
                 blockCellsCanCreateFrom.Add(new Vector2(i, j));
 
                 while (cellsCreated <= cellsCount)
@@ -48,7 +51,7 @@ public class PuzzlesCreator : MonoBehaviour
                     int maxX = x;
                     int minY = y;
                     int maxY = y;
-                    foreach (var variant in blockCells)
+                    foreach (var variant in blockCells.puzzleData)
                     {
                         if (variant.x < minX) minX = (int) variant.x;
                         if (variant.x > maxX) maxX = (int) variant.x;
@@ -83,12 +86,13 @@ public class PuzzlesCreator : MonoBehaviour
                     }
 
                     Vector2 selectedVariant = variants[Random.Range(0, variants.Count)];
-                    blockCells.Add(selectedVariant);
+                    blockCells.puzzleData.Add(selectedVariant);
                     blockCellsCanCreateFrom.Add(selectedVariant);
                     cells[(int) selectedVariant.x][(int) selectedVariant.y] = counter;
                     cellsCreated++;
                 }
-
+                
+                //createdPuzzles.Add(blockCells);
                 createdPuzzles.Add(blockCells);
 
                 counter++;

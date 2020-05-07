@@ -24,8 +24,7 @@ public class PuzzleController : MonoBehaviour
     
     [Space]
     public ImageManager imageManager;
-
-
+    
     [Space]
     public GameObject scrollView;
     public GameObject scrollViewContent;
@@ -35,15 +34,17 @@ public class PuzzleController : MonoBehaviour
     public int wCell;
     public int hCell;
 
+    public List<Vector2> posedPositions;
+    public List<GameObject> shadowsList;
+    
     private SettingsGame gameSettings;
     private bool isWin;
-   
 
     void NewGame()
     {
         originalImage.gameObject.SetActive(true);
         Clear();
-        Generate();
+        InitView();
     }
 
     void Clear()
@@ -55,7 +56,7 @@ public class PuzzleController : MonoBehaviour
         }*/
     }
 
-    private void Generate() //создание пазлов/нарезка текстуры
+    private void InitView() //создание пазлов/нарезка текстуры
     {
         Texture2D mainTexture = originalImage.mainTexture as Texture2D;
         Texture2D backgroundTexture = backgroundImage.mainTexture as Texture2D;
@@ -75,8 +76,9 @@ public class PuzzleController : MonoBehaviour
 
         wCell = w_cell;
         hCell = h_cell;
-        List<List<Vector2>> puzzle = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
-
+        List<PuzzleData> puzzle = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+        PuzzleState puzzleState = new PuzzleState(puzzle);
+        //TODO:  LoadPuzzle()
         foreach (var block in puzzle)
         {
             GameObject blockParent = Instantiate(puzzlePrefab, transform, false);
@@ -88,7 +90,7 @@ public class PuzzleController : MonoBehaviour
             int maxX = 0;
             int minY = Int32.MaxValue;
             int maxY = 0;
-            foreach (var elementPosition in block)
+            foreach (var elementPosition in block.puzzleData)
             {
                 if (elementPosition.x < minX) minX = (int) elementPosition.x;
                 if (elementPosition.x > maxX) maxX = (int) elementPosition.x;
@@ -116,12 +118,13 @@ public class PuzzleController : MonoBehaviour
             tex.Apply();
             backgroundTex.Apply();
             gridTex.Apply();
-            
-            
-            
-            foreach (var elementPosition in block)
+
+
+            var shadowElPos = puzzleBlock.gridImage.GetComponent<PuzzleShadow>().shadowElementPositions;
+            foreach (var elementPosition in block.puzzleData)
             {
-                
+                puzzleBlock.elementPositions.Add(elementPosition);
+                shadowElPos.Add(new Vector2(elementPosition.x*128, elementPosition.y*128));
                 var pixels = mainTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
                     h_cell, w_cell);
                 var backgroundPixels = backgroundTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
@@ -150,8 +153,11 @@ public class PuzzleController : MonoBehaviour
             //newPuzzle.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 
             puzzleBlock.puzzleController = this;
-            puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
-
+            //puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
+            puzzleBlock.puzzleData = block;
+            puzzleBlock.puzzleData.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
+            
+            //TODO: вместо пазл позишн, мы должны иметь ссылку на puzzleData 
             
             var puzzleItem = puzzleBlock.GetComponent<PuzzleItem>();
             puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
@@ -160,6 +166,7 @@ public class PuzzleController : MonoBehaviour
             
           
             var puzzleItemGridImage = puzzleItem.gridImage;
+            shadowsList.Add(puzzleItemGridImage);
             puzzleItemGridImage.GetComponent<Image>().sprite = gridSprite;
             puzzleItemGridImage.GetComponent<Image>().color = new Color(1,1,1,gameSettings.transparency);
             puzzleItemGridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);

@@ -2153,3 +2153,5 @@ MonoBehaviour:
   canvas: {fileID: 336406862}
   wCell: 0
   hCell: 0
+  posedPositions: []
+  shadowsList: []

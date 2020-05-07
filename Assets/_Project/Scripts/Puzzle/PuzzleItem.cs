@@ -14,14 +14,17 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public PuzzleController puzzleController;
     public GameObject ScrollParent;
     public ImageManager imageManager;
-    public Vector2 puzzlePosition;
+    //public Vector2 puzzlePosition;
     public GameObject puzzleImage;
     public GameObject backgroundImage;
     public GameObject gridImage;
 
+    public PuzzleData puzzleData;
     
     public ScrollRect scrollRect;
     public Canvas canvas;
+
+    public List<Vector2> elementPositions;
 
     private bool isDraggable;
     private bool isFramed;
@@ -49,6 +52,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         isDraggable = false;
         scrollRect = puzzleController.scrollView.GetComponent<ScrollRect>();
         transform.localScale=Vector3.one;
+
+
     }
 
     private void Update()
@@ -72,7 +77,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         clickPosition = eventData.position;
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rtPuzzleImage, eventData.position, null, out localPoint);
-        Debug.Log("localpoint = " + localPoint);
         offsetToCenter = localPoint;
     }
 
@@ -95,17 +99,19 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         imageManager.FrameOff();
 
         //rt.anchoredPosition
-        Debug.Log("Distance = " + Vector2.Distance(puzzleImage.GetComponent<RectTransform>().position, puzzlePosition));
+        //Debug.Log("Distance = " + Vector2.Distance(puzzleImage.GetComponent<RectTransform>().position, puzzlePosition));
         
-        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzzlePosition) < settingsGame.puzzleDistance)
+        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzzleData.puzzlePosition) < settingsGame.puzzleDistance)
         {
-            puzzleImage.transform.localPosition = puzzlePosition;
-            rtPuzzleImage.anchoredPosition = puzzlePosition;
+            puzzleImage.transform.localPosition = puzzleData.puzzlePosition;
+            rtPuzzleImage.anchoredPosition = puzzleData.puzzlePosition;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
             gridImage.SetActive(false);
             transform.SetParent(puzzleController.DragParent, true);
             puzzleImage.transform.SetParent(this.transform,true);
+
+            puzzleData.isPosed = true;
 
             //repeat pattern
             foreach (var bg in imageManager.backgroundnPanels)
@@ -115,6 +121,61 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
                 puzzleClone.transform.localPosition = pos;
             }
 
+            
+            foreach (var pos in elementPositions)
+            {
+                puzzleController.posedPositions.Add(new Vector2(pos.x*128, pos.y*128));//добавляем позиции поставленного пазла    
+            }
+
+            //TODO: ПОФИКСИТЬ ВОЗМОЖНЫЕ ПОЗИЦИИ ТЕНЕЙ, КОГДА ДРУГОЙ ПАЗЛ УЖЕ ПОСТАВЛЕН
+            /*var shadowsList = puzzleController.shadowsList;// список теней
+            foreach (var shadow in shadowsList)
+            {
+                var shadowElPos = shadow.GetComponent<PuzzleShadow>().shadowPositions; //список позиций в каждой тени
+                var hFigure = shadow.GetComponent<RectTransform>().sizeDelta.x / 128;
+                var wFigure = shadow.GetComponent<RectTransform>().sizeDelta.y / 128;
+                Vector2 removedPosition = new Vector2();
+                Vector2 removedPosition2 = new Vector2();
+                
+                List<int> removedList = new List<int>();
+                foreach (var shadowPos in puzzleController.posedPositions)
+                {
+                    for (int i = 1; i <= hFigure; i++)
+                    {
+                        for (int j = 1; j <= wFigure; j++)
+                        {
+                            //Vector2 removedPosition = new Vector2(shadowPos.x * i, shadowPos.y * j);
+                            removedPosition.x = shadowPos.x * i;
+                            removedPosition.y = shadowPos.y * j;
+                            //Vector2 removedPosition2 = new Vector2(shadowPos.x - 128*i, shadowPos.y -128*j);
+                            removedPosition2.x = shadowPos.x - 128 * i;
+                            removedPosition2.y = shadowPos.y - 128 * j;
+                            
+                            //Debug.Log("shadowElPos = "+shadowElPos.Count);
+                            if (shadowElPos.Contains(removedPosition))
+                            {
+                                removedList.Add(shadowElPos.IndexOf(removedPosition));
+                            }
+                            if (shadowElPos.Contains(removedPosition2))
+                            {
+                                removedList.Add(shadowElPos.IndexOf(removedPosition2));
+                            }
+                        }
+                    }
+                }
+                
+                for (int k = shadowElPos.Count; k >= 0; k--)
+                {
+                    if (removedList.Contains(k))
+                    {
+
+                        shadowElPos.RemoveAt(k);
+                    }
+                }
+                
+                
+            }*/
+            
             isDraggable = false;
         }
         else
@@ -143,10 +204,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
-          
-
-            
-            
             puzzleImage.transform.position = eventData.position-offsetToCenter;
                 
                 
@@ -161,16 +218,25 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
        
     }
 
-    public void SetPuzzlePosOnGridImage(Vector2 puzzle, GameObject gridImage, List<Vector2> puzzlePozList)
+    private void SetPuzzlePosOnGridImage(Vector2 puzzle, GameObject gridImage, List<Vector2> puzzlePozList)
     {
         float nearestPos=1000f;
         foreach (var pos in puzzlePozList)
         {
-            if (Vector2.Distance(puzzle, pos) < nearestPos)
+            //TODO: проверять стоит ли пазл 
+            /*var isPosed = false;
+            foreach (var p in elementPositions)
             {
-                nearestPos = Vector2.Distance(puzzle, pos);
-                gridImage.GetComponent<RectTransform>().anchoredPosition = pos;
-            }
+                if (puzzleController.posedPositions.Contains(p))
+                {
+                    elementPositions.Remove(p);
+                    isPosed = true;
+                    Debug.Log("ХУЙ");
+                }
+            }*/
+            if (!(Vector2.Distance(puzzle, pos) < nearestPos)) continue;
+            nearestPos = Vector2.Distance(puzzle, pos);
+            gridImage.GetComponent<RectTransform>().anchoredPosition = pos;
         }
         
     }

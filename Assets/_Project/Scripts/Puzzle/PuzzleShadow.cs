@@ -9,7 +9,7 @@ public class PuzzleShadow : MonoBehaviour
 {
    public PuzzleController puzzleController;
    public List<Vector2> shadowPositions;
-
+   public List<Vector2> shadowElementPositions;
 
    private void Start()
    {
