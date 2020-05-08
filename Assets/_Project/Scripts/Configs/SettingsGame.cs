@@ -26,6 +26,12 @@ namespace Puzzles.Configs
         public bool IsSaveGame = true;
         public string PathSaves;
 
+        public void ClearSaves()
+        {
+            File.Delete(ToolSaver.PathFor(PathSaves, typeof(PuzzleState)));
+
+            Debug.Log("DONE!");
+        }
 
     }
 }
