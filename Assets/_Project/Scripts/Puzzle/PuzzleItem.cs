@@ -62,15 +62,12 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             puzzleImage.transform.localPosition = puzDataPos;
             rtPuzzleImage.anchoredPosition = puzDataPos;
             
-            
-            
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
             gridImage.SetActive(false);
-            //transform.SetParent(puzzleController.DragParent, true);
-            //puzzleImage.transform.SetParent(puzzleController.DragParent,true);
             
-            //puzzleController.SetPreferedContentSize();
+            RepeatPattern(imageManager.backgroundPanels, rtPuzzleImage.gameObject);
+
         }
 
     }
@@ -132,16 +129,17 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             transform.SetParent(puzzleController.DragParent, true);
             puzzleImage.transform.SetParent(this.transform,true);
 
-            puzzleData.isPosed = true;
+            
 
             //repeat pattern
-            foreach (var bg in imageManager.backgroundPanels)
+            /*foreach (var bg in imageManager.backgroundPanels)
             {
                 Vector3 pos = transform.localPosition;
                 GameObject puzzleClone = Instantiate(gameObject, bg.transform);
                 puzzleClone.transform.localPosition = pos;
-                Debug.Log("pos = " + pos);
-            }
+
+            }*/
+            RepeatPattern(imageManager.backgroundPanels, gameObject);
 
             
             foreach (var pos in elementPositions)
@@ -199,6 +197,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             }*/
             
             isDraggable = false;
+            puzzleData.isPosed = true;
         }
         else
         {
@@ -206,10 +205,19 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             puzzleImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.localPosition = Vector3.zero;
             gridImage.transform.localPosition = Vector3.zero;
-            
         }
 
         puzzleController.SetPreferedContentSize();
+    }
+
+    public void RepeatPattern(List<Image> images, GameObject go)
+    {
+        foreach (var bg in images)
+        {
+            Vector3 pos = go.transform.localPosition;
+            GameObject puzzleClone = Instantiate(go, bg.transform);
+            puzzleClone.transform.localPosition = pos;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)

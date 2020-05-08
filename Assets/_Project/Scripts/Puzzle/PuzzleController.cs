@@ -174,6 +174,7 @@ public class PuzzleController : MonoBehaviour
             if (puzzleBlock.puzzleData.isPosed)
             {
                 blockParent.transform.SetParent(DragParent);
+                
             }
             else
             {
@@ -181,7 +182,6 @@ public class PuzzleController : MonoBehaviour
             }
 
         }
-
         this.NextFrame(SetPreferedContentSize);
         originalImage.gameObject.SetActive(false);
     }
@@ -192,7 +192,6 @@ public class PuzzleController : MonoBehaviour
         scrollViewContent.GetComponent<RectTransform>().sizeDelta =
             new Vector2(layoutGroup.preferredWidth, layoutGroup.preferredHeight);
         scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, layoutGroup.preferredHeight);
-        Debug.Log("layoutGroup.preferredWidth = " + layoutGroup.preferredWidth);
     }
 
     private void Start()
@@ -206,16 +205,13 @@ public class PuzzleController : MonoBehaviour
         {
             DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
         }
-       
         InitView(DataPuzzleState.puzzleDatas);
-        //SetPreferedContentSize();
-      
+
     }
     
     private void InitGameState()
     {
         DataPuzzleState = ToolSaver.Instance.Load<PuzzleState>(gameSettings.PathSaves);
-        Debug.Log("path = " + gameSettings.PathSaves);
     }
 
     public void SaveGameState()
