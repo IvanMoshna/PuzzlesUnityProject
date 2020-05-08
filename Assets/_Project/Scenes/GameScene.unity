@@ -1795,7 +1795,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tools:
   - {fileID: 11400000, guid: 65b0582259402944198436cd026e6d66, type: 2}
-  - {fileID: 11400000, guid: 126996fcec79e22438dbf8eb2c3d1347, type: 2}
   IsForceEnglish: 0
 --- !u!114 &1588796452
 MonoBehaviour:
@@ -2027,7 +2026,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 540, y: 0}
-  m_SizeDelta: {x: 6400, y: 150}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1854533635
 MonoBehaviour:

@@ -41,7 +41,6 @@ public class PuzzleController : MonoBehaviour
     private SettingsGame gameSettings;
     private bool isWin;
     private PuzzleState DataPuzzleState;
-    private ConfigMain configMain;
 
     void NewGame()
     {
@@ -171,11 +170,19 @@ public class PuzzleController : MonoBehaviour
             
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-            blockParent.transform.SetParent(scrollViewContent.transform);
+
+            if (puzzleBlock.puzzleData.isPosed)
+            {
+                blockParent.transform.SetParent(DragParent);
+            }
+            else
+            {
+                blockParent.transform.SetParent(scrollViewContent.transform);
+            }
 
         }
 
-        // this.NextFrame(() => SetPreferedContentSize());
+        this.NextFrame(SetPreferedContentSize);
         originalImage.gameObject.SetActive(false);
     }
 
@@ -186,15 +193,14 @@ public class PuzzleController : MonoBehaviour
             new Vector2(layoutGroup.preferredWidth, layoutGroup.preferredHeight);
         scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, layoutGroup.preferredHeight);
         Debug.Log("layoutGroup.preferredWidth = " + layoutGroup.preferredWidth);
-
     }
 
-    private void Awake()
+    private void Start()
     {
         gameSettings = ToolBox.Get<SettingsGame>();
 
         originalImage.gameObject.SetActive(true);
-        Clear();
+        //Clear();
         InitGameState();
         if (DataPuzzleState == null)
         {
@@ -205,13 +211,7 @@ public class PuzzleController : MonoBehaviour
         //SetPreferedContentSize();
       
     }
-
-
-    public void SetPositions(List<PuzzleData> puzzleDatas)
-    {
-
-        
-    }
+    
     private void InitGameState()
     {
         DataPuzzleState = ToolSaver.Instance.Load<PuzzleState>(gameSettings.PathSaves);

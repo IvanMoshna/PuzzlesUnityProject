@@ -10,7 +10,6 @@
         <e p="_Project" t="Include">
           <e p="Scripts" t="Include">
             <e p="Configs" t="Include">
-              <e p="ConfigMain.cs" t="Include" />
               <e p="SettingsGame.cs" t="Include" />
             </e>
             <e p="ImageManager.cs" t="Include" />

@@ -54,12 +54,24 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         scrollRect = puzzleController.scrollView.GetComponent<ScrollRect>();
         transform.localScale=Vector3.one;
 
-        /*if (puzzleData.isPosed)
+        if (puzzleData.isPosed)
         {
             Vector2 puzDataPos = new Vector2(puzzleData.puzzlePosition.x, puzzleData.puzzlePosition.y);
+            rtPuzzleImage.transform.SetParent(puzzleController.DragParent, false);            
+
             puzzleImage.transform.localPosition = puzDataPos;
             rtPuzzleImage.anchoredPosition = puzDataPos;
-        }*/
+            
+            
+            
+            puzzleImage.GetComponent<Image>().raycastTarget = false;
+            backgroundImage.SetActive(false);
+            gridImage.SetActive(false);
+            //transform.SetParent(puzzleController.DragParent, true);
+            //puzzleImage.transform.SetParent(puzzleController.DragParent,true);
+            
+            //puzzleController.SetPreferedContentSize();
+        }
 
     }
 
