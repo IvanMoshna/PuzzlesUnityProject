@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Common;
-using Puzzles.Settings;
+using Puzzles.Configs;
+using Puzzles.Configs;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UIElements;
@@ -39,24 +40,26 @@ public class PuzzleController : MonoBehaviour
     
     private SettingsGame gameSettings;
     private bool isWin;
+    private PuzzleState DataPuzzleState;
+    private ConfigMain configMain;
 
     void NewGame()
     {
         originalImage.gameObject.SetActive(true);
         Clear();
-        InitView();
+        List<PuzzleData> puzzle;
+        //DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+        
+         
+        //InitView(DataPuzzleState.puzzleDatas);
     }
 
     void Clear()
     {
         isWin = false;
-        /*foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }*/
     }
 
-    private void InitView() //создание пазлов/нарезка текстуры
+    private void InitView(List<PuzzleData> puzzle) //нарезка текстуры
     {
         Texture2D mainTexture = originalImage.mainTexture as Texture2D;
         Texture2D backgroundTexture = backgroundImage.mainTexture as Texture2D;
@@ -76,9 +79,9 @@ public class PuzzleController : MonoBehaviour
 
         wCell = w_cell;
         hCell = h_cell;
-        List<PuzzleData> puzzle = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
-        PuzzleState puzzleState = new PuzzleState(puzzle);
-        //TODO:  LoadPuzzle()
+        //List<PuzzleData> puzzle = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+        //PuzzleState puzzleState = new PuzzleState(puzzle);
+
         foreach (var block in puzzle)
         {
             GameObject blockParent = Instantiate(puzzlePrefab, transform, false);
@@ -121,8 +124,9 @@ public class PuzzleController : MonoBehaviour
 
 
             var shadowElPos = puzzleBlock.gridImage.GetComponent<PuzzleShadow>().shadowElementPositions;
-            foreach (var elementPosition in block.puzzleData)
+            foreach (var eP in block.puzzleData)
             {
+                Vector2 elementPosition = new Vector2(eP.x, eP.y);
                 puzzleBlock.elementPositions.Add(elementPosition);
                 shadowElPos.Add(new Vector2(elementPosition.x*128, elementPosition.y*128));
                 var pixels = mainTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
@@ -148,23 +152,16 @@ public class PuzzleController : MonoBehaviour
             //this.NextFrame(()=>newPuzzle.transform.localScale=Vector3.one);
             newPuzzle.GetComponent<Image>().sprite = sprite;
             newPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-                //newPuzzle.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
-                //newPuzzle.GetComponent<RectTransform>().anchoredPosition = new Vector2((elementPosition.x - minX) * w_cell, (elementPosition.y - minY) * h_cell);
-            //newPuzzle.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 
             puzzleBlock.puzzleController = this;
-            //puzzleBlock.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
             puzzleBlock.puzzleData = block;
-            puzzleBlock.puzzleData.puzzlePosition = new Vector2(minX * w_cell, minY * h_cell);
-            
-            //TODO: вместо пазл позишн, мы должны иметь ссылку на puzzleData 
-            
+            puzzleBlock.puzzleData.puzzlePosition = new SerializablePosition(minX * w_cell, minY * h_cell);
+
             var puzzleItem = puzzleBlock.GetComponent<PuzzleItem>();
             puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
             puzzleItem.backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             puzzleItem.canvas = this.canvas;
             
-          
             var puzzleItemGridImage = puzzleItem.gridImage;
             shadowsList.Add(puzzleItemGridImage);
             puzzleItemGridImage.GetComponent<Image>().sprite = gridSprite;
@@ -172,13 +169,13 @@ public class PuzzleController : MonoBehaviour
             puzzleItemGridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             puzzleItemGridImage.GetComponent<PuzzleShadow>().puzzleController = this;
             
-            
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             blockParent.transform.SetParent(scrollViewContent.transform);
+
         }
 
-        this.NextFrame(() => SetPreferedContentSize());
+        // this.NextFrame(() => SetPreferedContentSize());
         originalImage.gameObject.SetActive(false);
     }
 
@@ -188,12 +185,46 @@ public class PuzzleController : MonoBehaviour
         scrollViewContent.GetComponent<RectTransform>().sizeDelta =
             new Vector2(layoutGroup.preferredWidth, layoutGroup.preferredHeight);
         scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, layoutGroup.preferredHeight);
+        Debug.Log("layoutGroup.preferredWidth = " + layoutGroup.preferredWidth);
+
     }
 
-    private void Start()
+    private void Awake()
     {
         gameSettings = ToolBox.Get<SettingsGame>();
-        NewGame();
-        Debug.Log("NewGame!");
+
+        originalImage.gameObject.SetActive(true);
+        Clear();
+        InitGameState();
+        if (DataPuzzleState == null)
+        {
+            DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+        }
+       
+        InitView(DataPuzzleState.puzzleDatas);
+        //SetPreferedContentSize();
+      
     }
+
+
+    public void SetPositions(List<PuzzleData> puzzleDatas)
+    {
+
+        
+    }
+    private void InitGameState()
+    {
+        DataPuzzleState = ToolSaver.Instance.Load<PuzzleState>(gameSettings.PathSaves);
+        Debug.Log("path = " + gameSettings.PathSaves);
+    }
+
+    public void SaveGameState()
+    {
+        if (gameSettings.IsSaveGame)
+        {
+            ToolSaver.Instance.Save(gameSettings.PathSaves, DataPuzzleState);
+        }
+    }
+    
+    private void OnApplicationQuit() { SaveGameState(); }
 }

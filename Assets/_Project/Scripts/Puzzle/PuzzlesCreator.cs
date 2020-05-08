@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class PuzzlesCreator : MonoBehaviour
 {
 
-    public static List<PuzzleData> CreatePuzzle(int height, int width)
+    public static PuzzleState CreatePuzzle(int height, int width)
     {//    public static List<List<Vector2>> CreatePuzzle(int height, int width)
 
         int[][] cells;
@@ -35,7 +35,8 @@ public class PuzzlesCreator : MonoBehaviour
                 PuzzleData blockCells = new PuzzleData();
                 //var blockCells = bCells.puzzleData;
                 List<Vector2> blockCellsCanCreateFrom = new List<Vector2>();
-                blockCells.puzzleData.Add(new Vector2(i, j));
+                //blockCells.puzzleData.Add(new Vector2(i, j));
+                blockCells.puzzleData.Add(new SerializableVector(i, j));
                 blockCellsCanCreateFrom.Add(new Vector2(i, j));
 
                 while (cellsCreated <= cellsCount)
@@ -86,7 +87,8 @@ public class PuzzlesCreator : MonoBehaviour
                     }
 
                     Vector2 selectedVariant = variants[Random.Range(0, variants.Count)];
-                    blockCells.puzzleData.Add(selectedVariant);
+                    //blockCells.puzzleData.Add(selectedVariant);
+                    blockCells.puzzleData.Add(new SerializableVector(selectedVariant.x, selectedVariant.y));
                     blockCellsCanCreateFrom.Add(selectedVariant);
                     cells[(int) selectedVariant.x][(int) selectedVariant.y] = counter;
                     cellsCreated++;
@@ -99,7 +101,8 @@ public class PuzzlesCreator : MonoBehaviour
             }
         }
 
-        return createdPuzzles;
+        PuzzleState puzzleState = new PuzzleState(createdPuzzles);
+        return puzzleState;
         
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < width; i++)

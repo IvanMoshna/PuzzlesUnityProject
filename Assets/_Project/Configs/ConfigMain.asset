@@ -9,15 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c47a646aaf28ee4f9ca88a4a931f944, type: 3}
-  m_Name: SettingsGame
+  m_Script: {fileID: 11500000, guid: 1405f4694144b2347a0694f6e56eecf1, type: 3}
+  m_Name: ConfigMain
   m_EditorClassIdentifier: 
-  puzzleDistance: 100
-  columns: 8
-  lines: 8
-  transparency: 0.3
-  DragDelay: 0.1
-  DragDelta: 10
-  isShuffled: 0
-  IsSaveGame: 1
-  PathSaves: /saves

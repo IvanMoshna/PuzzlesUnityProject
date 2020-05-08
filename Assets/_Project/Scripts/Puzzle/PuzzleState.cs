@@ -8,6 +8,11 @@ public class PuzzleState
 {
     public List<PuzzleData> puzzleDatas;
 
+    public PuzzleState()
+    {
+        puzzleDatas = new List<PuzzleData>();
+    }
+
     public PuzzleState(List<PuzzleData> pd)
     {
         puzzleDatas = pd;

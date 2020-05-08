@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Common;
-using Puzzles.Settings;
+using Puzzles.Configs;
+using Puzzles.Configs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -53,6 +54,12 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         scrollRect = puzzleController.scrollView.GetComponent<ScrollRect>();
         transform.localScale=Vector3.one;
 
+        /*if (puzzleData.isPosed)
+        {
+            Vector2 puzDataPos = new Vector2(puzzleData.puzzlePosition.x, puzzleData.puzzlePosition.y);
+            puzzleImage.transform.localPosition = puzDataPos;
+            rtPuzzleImage.anchoredPosition = puzDataPos;
+        }*/
 
     }
 
@@ -101,10 +108,12 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         //rt.anchoredPosition
         //Debug.Log("Distance = " + Vector2.Distance(puzzleImage.GetComponent<RectTransform>().position, puzzlePosition));
         
-        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzzleData.puzzlePosition) < settingsGame.puzzleDistance)
+        Vector2 puzDataPos = new Vector2(puzzleData.puzzlePosition.x, puzzleData.puzzlePosition.y);
+        
+        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzDataPos) < settingsGame.puzzleDistance)
         {
-            puzzleImage.transform.localPosition = puzzleData.puzzlePosition;
-            rtPuzzleImage.anchoredPosition = puzzleData.puzzlePosition;
+            puzzleImage.transform.localPosition = puzDataPos;
+            rtPuzzleImage.anchoredPosition = puzDataPos;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
             gridImage.SetActive(false);
@@ -114,11 +123,12 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             puzzleData.isPosed = true;
 
             //repeat pattern
-            foreach (var bg in imageManager.backgroundnPanels)
+            foreach (var bg in imageManager.backgroundPanels)
             {
                 Vector3 pos = transform.localPosition;
                 GameObject puzzleClone = Instantiate(gameObject, bg.transform);
                 puzzleClone.transform.localPosition = pos;
+                Debug.Log("pos = " + pos);
             }
 
             
