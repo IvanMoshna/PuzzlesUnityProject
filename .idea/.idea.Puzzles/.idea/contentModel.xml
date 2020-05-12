@@ -85,6 +85,103 @@
             <e p="NumericalFormatter.cs" t="Include" />
           </e>
         </e>
+        <e p="OSA" t="Include">
+          <e p="Docs" t="Include">
+            <e p="Manual link.txt" t="Include" />
+          </e>
+          <e p="Extra" t="Include">
+            <e p="PluginSupport" t="Include">
+              <e p="Playmaker" t="Include">
+                <e p="README.txt" t="Include" />
+              </e>
+            </e>
+            <e p="README.txt" t="Include" />
+          </e>
+          <e p="Resources" t="Include">
+            <e p="OSA" t="Include">
+              <e p="Templates" t="Include">
+                <e p="Scripts" t="Include">
+                  <e p="BasicGridAdapter.txt" t="Include" />
+                  <e p="BasicListAdapter.txt" t="Include" />
+                </e>
+                <e p="ScriptsChunks" t="Include">
+                  <e p="HeaderComment.txt" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="C.cs" t="Include" />
+            <e p="Core" t="Include">
+              <e p="AbstractViewsHolder.cs" t="Include" />
+              <e p="BaseItemViewsHolder.cs" t="Include" />
+              <e p="BaseParams.cs" t="Include" />
+              <e p="IOSA.cs" t="Include" />
+              <e p="ItemCountChangeMode.cs" t="Include" />
+              <e p="ItemsDescriptor.cs" t="Include" />
+              <e p="LayoutInfo.cs" t="Include" />
+              <e p="OSA.cs" t="Include" />
+              <e p="OSAConst.cs" t="Include" />
+              <e p="OSADebugger.cs" t="Include" />
+              <e p="OSAException.cs" t="Include" />
+              <e p="OSAInternal.cs" t="Include" />
+              <e p="OSASubComponents.cs" t="Include" />
+              <e p="Snapper8.cs" t="Include" />
+              <e p="SubComponents" t="Include">
+                <e p="AllowContentOutsideBoundsMode.cs" t="Include" />
+                <e p="ComputeVisibilityManager.cs" t="Include" />
+                <e p="ComputeVisibilityParams.cs" t="Include" />
+                <e p="ContentSizeOrPositionChangeParams.cs" t="Include" />
+                <e p="InternalState.cs" t="Include" />
+                <e p="NestingManager.cs" t="Include" />
+                <e p="ReleaseFromPullManager.cs" t="Include" />
+              </e>
+            </e>
+            <e p="CustomAdapters" t="Include">
+              <e p="GridView" t="Include">
+                <e p="CellGroupViewsHolder.cs" t="Include" />
+                <e p="CellViewsHolder.cs" t="Include" />
+                <e p="GridAdapter.cs" t="Include" />
+                <e p="GridParams.cs" t="Include" />
+              </e>
+            </e>
+            <e p="CustomParams" t="Include">
+              <e p="BaseParamsWithPrefab.cs" t="Include" />
+              <e p="BaseParamsWithPrefabAndData.cs" t="Include" />
+              <e p="BaseParamsWithPrefabAndLazyData.cs" t="Include" />
+            </e>
+            <e p="DataHelpers" t="Include">
+              <e p="LazyDataHelper.cs" t="Include" />
+              <e p="LazyList.cs" t="Include" />
+              <e p="SimpleDataHelper.cs" t="Include" />
+            </e>
+            <e p="Editor" t="Include">
+              <e p="BaseOSAWindow.cs" t="Include" />
+              <e p="CEditor.cs" t="Include" />
+              <e p="CreateOSAWindow.cs" t="Include" />
+              <e p="CWiz.cs" t="Include" />
+              <e p="InitOSAWindow.cs" t="Include" />
+              <e p="MenuItems.cs" t="Include" />
+              <e p="OSA.Editor.asmdef" t="Include" />
+            </e>
+            <e p="frame8" t="Include">
+              <e p="Common" t="Include">
+                <e p="IInitializable8.cs" t="Include" />
+                <e p="Singleton8.cs" t="Include" />
+                <e p="UIUtils8.cs" t="Include" />
+              </e>
+              <e p="DotNETCoreCompat.cs" t="Include" />
+              <e p="Extensions" t="Include">
+                <e p="RectTransformExtensions.cs" t="Include" />
+                <e p="TransformExtensions.cs" t="Include" />
+                <e p="VectorExtensions.cs" t="Include" />
+              </e>
+              <e p="IScrollRectProxy.cs" t="Include" />
+              <e p="ScrollbarFixer8.cs" t="Include" />
+            </e>
+            <e p="OSA.asmdef" t="Include" />
+          </e>
+        </e>
         <e p="Packages" t="Include">
           <e p="SimpleLocalization" t="Include">
             <e p="Downloader.cs" t="Include" />
@@ -99,8 +196,13 @@
             <e p="Sheet.cs" t="Include" />
           </e>
         </e>
+        <e p="Scripts" t="Include">
+          <e p="BasicGridAdapter.cs" t="Include" />
+        </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />
+      <e p="OSA-Editor.csproj" t="IncludeRecursive" />
+      <e p="OSA.csproj" t="IncludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
       <e p="Puzzles.sln" t="IncludeFlat" />
       <e p="Temp\bin" t="ExcludeRecursive" />
