@@ -25,6 +25,8 @@ public class PuzzleController : MonoBehaviour
     
     [Space]
     public ImageManager imageManager;
+
+    public GameObject UIController;
     
     [Space]
     public GameObject scrollView;
@@ -42,7 +44,7 @@ public class PuzzleController : MonoBehaviour
     private bool isWin;
     private PuzzleState DataPuzzleState;
 
-    void NewGame()
+    /*void NewGame()
     {
         originalImage.gameObject.SetActive(true);
         Clear();
@@ -51,11 +53,29 @@ public class PuzzleController : MonoBehaviour
         
          
         //InitView(DataPuzzleState.puzzleDatas);
-    }
+    }*/
 
-    void Clear()
+    public void Clear()
     {
-        isWin = false;
+        var contentList = scrollViewContent.transform;
+        foreach (Transform cl in contentList)
+        {
+            Destroy(cl.gameObject);
+        }
+
+        var dragParentList = DragParent.transform;
+        foreach (Transform dP in dragParentList)
+        {
+            Destroy(dP.gameObject);
+        }
+
+        foreach (var bp in imageManager.backgroundPanels)
+        {
+            foreach (Transform bpImage in bp.transform)
+            {
+                Destroy(bpImage.gameObject);
+            }
+        }
     }
 
     private void InitView(List<PuzzleData> puzzle) //нарезка текстуры
@@ -173,6 +193,7 @@ public class PuzzleController : MonoBehaviour
 
             if (puzzleBlock.puzzleData.isPosed)
             {
+                
                 blockParent.transform.SetParent(DragParent);
                 
             }
@@ -203,11 +224,24 @@ public class PuzzleController : MonoBehaviour
         InitGameState();
         if (DataPuzzleState == null)
         {
-            DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+            //DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+            NewGame();
         }
-        InitView(DataPuzzleState.puzzleDatas);
+        else
+        {
+            UIController.GetComponent<UIController>().ContinueScreen.SetActive(true);
+            InitView(DataPuzzleState.puzzleDatas);
+        }
+        //InitView(DataPuzzleState.puzzleDatas);
 
     }
+
+    public void NewGame()
+    {
+        DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+        InitView(DataPuzzleState.puzzleDatas);
+    }
+    
     
     private void InitGameState()
     {
