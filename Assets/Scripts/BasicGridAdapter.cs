@@ -35,6 +35,7 @@ using frame8.Logic.Misc.Other.Extensions;
 using Com.TheFallenGames.OSA.CustomAdapters.GridView;
 using Com.TheFallenGames.OSA.DataHelpers;
 using Common;
+using Random = System.Random;
 
 // The date was temporarily included in the namespace to prevent duplicate class names
 // You should modify the namespace to your own or - if you're sure there will be no conflicts - remove it altogether
@@ -47,6 +48,8 @@ namespace Your.Namespace.Here20May12044942767.Grids
 		// Helper that stores data and notifies the adapter when items count changes
 		// Can be iterated and can also have its elements accessed by the [] operator
 		public SimpleDataHelper<PuzzleSource> Data { get; private set; }
+
+		public Sprite[] patternsSprites;
 		
 		#region OSA implementation
 		protected override void Start()
@@ -92,8 +95,12 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			//Debug.Log(pathColor);
 			Sprite colorSprite = Resources.Load<Sprite>(pathColor);
 			Sprite bwSprite = Resources.Load<Sprite>(pathBW);
-			newOrRecycled.icon.sprite = colorSprite;
+			//newOrRecycled.icon.sprite = colorSprite;
 			newOrRecycled.backgroundIcon.sprite = bwSprite;
+			newOrRecycled.pattenIcon.sprite = patternsSprites[UnityEngine.Random.Range(0, patternsSprites.Length)];
+			newOrRecycled.pattenIcon.SetNativeSize();
+			var icon = newOrRecycled.pattenIcon.transform.GetChild(0);
+			icon.GetComponent<Image>().sprite = colorSprite;
 
 			//newOrRecycled.backgroundImage.color = model.color;
 			//newOrRecycled.titleText.text = model.title + " #" + newOrRecycled.ItemIndex;
@@ -204,9 +211,10 @@ namespace Your.Namespace.Here20May12044942767.Grids
 	public class MyGridItemViewsHolder : CellViewsHolder
 	{
 		
-		public Image icon;
+		//public Image icon;
 		public Image backgroundIcon;
 		//public Text text;
+		public Image pattenIcon;
 		
 
 
@@ -218,8 +226,9 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
 			// which infers the variable's component from its type, so you won't need to specify it yourself
 			
-			views.GetComponentAtPath("Icon", out icon);
+			//views.GetComponentAtPath("Icon", out icon);
 			views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
+			views.GetComponentAtPath("PatternIcon", out pattenIcon);
 			//views.GetComponentAtPath("Text", out text);
 			
 			
