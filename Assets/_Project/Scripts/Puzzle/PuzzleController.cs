@@ -265,6 +265,7 @@ public class PuzzleController : MonoBehaviour
             {
                 if (pID.puzzleID == ID)
                 {
+                    //UIController.GetComponent<UIController>().OnContinueScreen();
                     Debug.Log(pID.puzzleID);
                     InitView(pID.puzzleDatas);
                     break;

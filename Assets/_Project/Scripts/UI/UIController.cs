@@ -23,9 +23,14 @@ public class UIController : MonoBehaviour
         MenuScreen.SetActive(true);
     }
 
-    public void GoToGAmeScreen()
+    public void GoToGameScreen()
     {
         DisableAll();
         GameScreen.SetActive(true);
+    }
+
+    public void OnContinueScreen()
+    {
+        ContinueScreen.SetActive(true);
     }
 }

@@ -3917,7 +3917,7 @@ MonoBehaviour:
       _MaxCellsPerGroup: -1
       _UseDefaultItemSizeForCellGroupSize: 0
       cellPrefab: {fileID: 313478312}
-      alignmentOfCellsInGroup: 4
+      alignmentOfCellsInGroup: 0
       spacingInGroup: -1
       groupPadding:
         m_Left: 10

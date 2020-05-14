@@ -16,7 +16,7 @@ public class UIMenuButtonController : MonoBehaviour
     
     public void OnPuzzleChoseClick()
     {
-        uiController.GoToGAmeScreen();
+        uiController.GoToGameScreen();
         puzzleController.originalImage.sprite = icon.sprite;
         puzzleController.backgroundImage.sprite = backgrounIcon.sprite;
         puzzleController.NewGame();

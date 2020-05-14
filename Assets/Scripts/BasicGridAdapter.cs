@@ -85,10 +85,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			
 			PuzzleSource model = Data[newOrRecycled.ItemIndex];
 			//ЗДЕСЬ ПИХАЕМ КАРТИНКИ
-
-
-
-
+			
 			//newOrRecycled.text.text = model.originalImageID;
 			var pathColor = Path.Combine("Color", model.originalImageID);
 			var pathBW = Path.Combine("BW", model.backgroundImageID);
@@ -99,6 +96,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			newOrRecycled.backgroundIcon.sprite = bwSprite;
 			newOrRecycled.pattenIcon.sprite = patternsSprites[UnityEngine.Random.Range(0, patternsSprites.Length)];
 			newOrRecycled.pattenIcon.SetNativeSize();
+			Debug.Log("Update");
 			var icon = newOrRecycled.pattenIcon.transform.GetChild(0);
 			icon.GetComponent<Image>().sprite = colorSprite;
 
@@ -190,7 +188,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 				
 			}
 			
-			Data.List.AddRange(newItems);
+			//Data.List.AddRange(newItems);
 			Data.NotifyListChangedExternally();
 		}
 	}

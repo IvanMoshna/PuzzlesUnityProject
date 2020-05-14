@@ -312,10 +312,10 @@ namespace Com.TheFallenGames.OSA.CustomAdapters.GridView
 			// At this point there are enough groups for sure, but there may not be enough enabled cells, or there may be too many enabled cells
 
 			int activeCellsForThisGroup;
-            // If it's the last one
+			// If it's the last one
             if (newOrRecycled.ItemIndex + 1 == GetCellGroupsCount())
             {
-                int totalCellsBeforeThisGroup = 0;
+	            int totalCellsBeforeThisGroup = 0;
                 if (newOrRecycled.ItemIndex > 0)
                 {
                     totalCellsBeforeThisGroup = newOrRecycled.ItemIndex * _Params.CurrentUsedNumCellsPerGroup;
@@ -327,7 +327,8 @@ namespace Com.TheFallenGames.OSA.CustomAdapters.GridView
                 activeCellsForThisGroup = _Params.CurrentUsedNumCellsPerGroup;
             }
             newOrRecycled.NumActiveCells = activeCellsForThisGroup;
-
+            
+            //НАХУЯ ЭТО?
             for (int i = 0; i < activeCellsForThisGroup; ++i)
                 UpdateCellViewsHolder(newOrRecycled.ContainingCellViewsHolders[i]);
         }
