@@ -10,6 +10,7 @@ using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Your.Namespace.Here20May12044942767.Grids;
 using Image = UnityEngine.UI.Image;
 
 public class PuzzleController : MonoBehaviour
@@ -39,21 +40,13 @@ public class PuzzleController : MonoBehaviour
 
     public List<Vector2> posedPositions;
     public List<GameObject> shadowsList;
+
+    [Space] 
+    public Content content;
     
     private SettingsGame gameSettings;
     private bool isWin;
     private PuzzleState DataPuzzleState;
-
-    /*void NewGame()
-    {
-        originalImage.gameObject.SetActive(true);
-        Clear();
-        List<PuzzleData> puzzle;
-        //DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
-        
-         
-        //InitView(DataPuzzleState.puzzleDatas);
-    }*/
 
     public void Clear()
     {
@@ -215,11 +208,19 @@ public class PuzzleController : MonoBehaviour
         scrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, layoutGroup.preferredHeight);
     }
 
+    private void Awake()
+    {
+        content = Content.Load();
+        ToolBox.Add(content);
+    }
+
     private void Start()
     {
         gameSettings = ToolBox.Get<SettingsGame>();
 
-        originalImage.gameObject.SetActive(true);
+
+
+        /*originalImage.gameObject.SetActive(true);
         //Clear();
         InitGameState();
         if (DataPuzzleState == null)
@@ -231,11 +232,11 @@ public class PuzzleController : MonoBehaviour
         {
             UIController.GetComponent<UIController>().ContinueScreen.SetActive(true);
             InitView(DataPuzzleState.puzzleDatas);
-        }
+        }*/
         //InitView(DataPuzzleState.puzzleDatas);
 
     }
-
+    
     public void NewGame()
     {
         DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);

@@ -14,11 +14,14 @@ public class UIController : MonoBehaviour
     private void DisableAll()
     {
         ContinueScreen.SetActive(false);
+        GameScreen.SetActive(false);
+        MenuScreen.SetActive(false);
     }
 
 
     private void Awake()
     {
         DisableAll();
+        MenuScreen.SetActive(true);
     }
 }

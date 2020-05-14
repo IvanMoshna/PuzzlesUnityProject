@@ -23,6 +23,10 @@
               <e p="SettingsGameEditor.cs" t="Include" />
             </e>
             <e p="ImageManager.cs" t="Include" />
+            <e p="Model" t="Include">
+              <e p="Content.cs" t="Include" />
+              <e p="PuzzleSource.cs" t="Include" />
+            </e>
             <e p="Puzzle" t="Include">
               <e p="Puzzle.cs" t="Include" />
               <e p="PuzzleController.cs" t="Include" />
@@ -36,6 +40,7 @@
             <e p="SerializableVector.cs" t="Include" />
             <e p="ShapeGenerator.cs" t="Include" />
             <e p="UI" t="Include">
+              <e p="ScrollviewAdapter.cs" t="Include" />
               <e p="UIContinueScreen.cs" t="Include" />
               <e p="UIController.cs" t="Include" />
             </e>

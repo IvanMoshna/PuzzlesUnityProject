@@ -28,11 +28,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using frame8.Logic.Misc.Other.Extensions;
 using Com.TheFallenGames.OSA.CustomAdapters.GridView;
 using Com.TheFallenGames.OSA.DataHelpers;
+using Common;
 
 // The date was temporarily included in the namespace to prevent duplicate class names
 // You should modify the namespace to your own or - if you're sure there will be no conflicts - remove it altogether
@@ -44,20 +46,27 @@ namespace Your.Namespace.Here20May12044942767.Grids
 	{
 		// Helper that stores data and notifies the adapter when items count changes
 		// Can be iterated and can also have its elements accessed by the [] operator
-		public SimpleDataHelper<MyGridItemModel> Data { get; private set; }
-
+		public SimpleDataHelper<PuzzleSource> Data { get; private set; }
 		
 		#region OSA implementation
 		protected override void Start()
 		{
-			Data = new SimpleDataHelper<MyGridItemModel>(this);
-
-			// Calling this initializes internal data and prepares the adapter to handle item count changes
 			base.Start();
+			var content = ToolBox.Get<Content>();
+			Data = new SimpleDataHelper<PuzzleSource>(this);
+			Data.InsertItemsAtStart(content.puzzleSources);
+			// Calling this initializes internal data and prepares the adapter to handle item count changes
+			
+			/*List<Sprite> iconsColor = new List<Sprite>();
+			for (int i = 0; i < content.puzzleSources.Count; i++)
+			{
+				var pathColor = Path.Combine("Color", content.puzzleSources[i].originalImageID);
+				iconsColor.Add(Resources.Load<Sprite>(pathColor));
+			}*/
 
 			// Retrieve the models from your data source and set the items count
-			
-			RetrieveDataAndUpdate(1500);
+
+			RetrieveDataAndUpdate(Data.Count);
 			
 		}
 
@@ -71,11 +80,24 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// index of item that should be represented by this views holder. You'll use this index
 			// to retrieve the model from your data set
 			
-			MyGridItemModel model = Data[newOrRecycled.ItemIndex];
+			PuzzleSource model = Data[newOrRecycled.ItemIndex];
+			//ЗДЕСЬ ПИХАЕМ КАРТИНКИ
+
+
+
+
+			//newOrRecycled.text.text = model.originalImageID;
+			var pathColor = Path.Combine("Color", model.originalImageID);
+			var pathBW = Path.Combine("BW", model.backgroundImageID);
+			//Debug.Log(pathColor);
+			Sprite colorSprite = Resources.Load<Sprite>(pathColor);
+			Sprite bwSprite = Resources.Load<Sprite>(pathBW);
+			newOrRecycled.icon.sprite = colorSprite;
+			newOrRecycled.backgroundIcon.sprite = bwSprite;
 
 			//newOrRecycled.backgroundImage.color = model.color;
 			//newOrRecycled.titleText.text = model.title + " #" + newOrRecycled.ItemIndex;
-			
+
 		}
 
 		// This is the best place to clear an item's views in order to prepare it from being recycled, but this is not always needed, 
@@ -96,7 +118,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 		// The adapter needs to be notified of any change that occurs in the data list. 
 		// For GridAdapters, only Refresh and ResetItems work for now
 		#region data manipulation
-		public void AddItemsAt(int index, IList<MyGridItemModel> items)
+		public void AddItemsAt(int index, IList<PuzzleSource> items)
 		{
 			//Commented: this only works with Lists. ATM, Insert for Grids only works by manually changing the list and calling NotifyListChangedExternally() after
 			//Data.InsertItems(index, items);
@@ -112,15 +134,15 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			Data.NotifyListChangedExternally();
 		}
 
-		public void SetItems(IList<MyGridItemModel> items)
+		public void SetItems(IList<PuzzleSource> items)
 		{
 			Data.ResetItems(items);
 		}
 		#endregion
 
 
-		// Here, we're requesting <count> items from the data source
-		void RetrieveDataAndUpdate(int count)
+		// Here, we're requesting <count> items from the data source  Здесь мы запрашиваем <count> элементы из источника данных
+		public void RetrieveDataAndUpdate(int count)
 		{
 			StartCoroutine(FetchMoreItemsFromDataSourceAndUpdate(count));
 		}
@@ -132,34 +154,35 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// Simulating data retrieving delay
 			yield return new WaitForSeconds(.5f);
 			
-			var newItems = new MyGridItemModel[count];
+			var newItems = new PuzzleSource[count];
 
 			// Retrieve your data here
 			
 			for (int i = 0; i < count; ++i)
 			{
-				var model = new MyGridItemModel()
+				var model = Data[i];
 				{
-					title = "Random item ",
-					color = new Color(
-								UnityEngine.Random.Range(0f, 1f),
-								UnityEngine.Random.Range(0f, 1f),
-								UnityEngine.Random.Range(0f, 1f),
-								UnityEngine.Random.Range(0f, 1f)
-							)
-				};
+					model.originalImageID = Data[i].originalImageID;
+					model.backgroundImageID = Data[i].backgroundImageID;
+				}
+			
 				newItems[i] = model;
 			}
 			
 
-			OnDataRetrieved(newItems);
+			OnDataRetrieved(newItems);//здесь пустой список     теперь не пустой
 		}
 
-		void OnDataRetrieved(MyGridItemModel[] newItems)//добавляет итемы в контент
+		void OnDataRetrieved(PuzzleSource[] newItems)//добавляет итемы в контент
 		{
 			//Commented: this only works with Lists. ATM, Insert for Grids only works by manually changing the list and calling NotifyListChangedExternally() after
 			// Data.InsertItemsAtEnd(newItems);
 
+			for (int i = 0; i < Data.Count; i++)
+			{
+				
+			}
+			
 			Data.List.AddRange(newItems);
 			Data.NotifyListChangedExternally();
 		}
@@ -169,22 +192,21 @@ namespace Your.Namespace.Here20May12044942767.Grids
 	// Class containing the data associated with an item
 	public class MyGridItemModel
 	{
-		
-		public string title;
-		public Color color;
-		
+		public Image icon;
+		public Image backIcon;
 	}
 
 
-	// This class keeps references to an item's views.
+	// This class keeps references to an item's views. //Этот класс хранит ссылки на представления элемента.
 	// Your views holder should extend BaseItemViewsHolder for ListViews and CellViewsHolder for GridViews
 	// The cell views holder should have a single child (usually named "Views"), which contains the actual 
 	// UI elements. A cell's root is never disabled - when a cell is removed, only its "views" GameObject will be disabled
 	public class MyGridItemViewsHolder : CellViewsHolder
 	{
 		
-		public Text titleText;
-		public Image backgroundImage;
+		public Image icon;
+		public Image backgroundIcon;
+		//public Text text;
 		
 
 
@@ -196,8 +218,13 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
 			// which infers the variable's component from its type, so you won't need to specify it yourself
 			
-			views.GetComponentAtPath("TitleText", out titleText);
-			views.GetComponentAtPath("BackgroundImage", out backgroundImage);
+			views.GetComponentAtPath("Icon", out icon);
+			views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
+			//views.GetComponentAtPath("Text", out text);
+			
+			
+			
+			
 			
 		}
 		
