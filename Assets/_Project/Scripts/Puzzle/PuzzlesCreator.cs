@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 public class PuzzlesCreator : MonoBehaviour
 {
-
     public static PuzzleState CreatePuzzle(int height, int width)
     {//    public static List<List<Vector2>> CreatePuzzle(int height, int width)
 

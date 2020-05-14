@@ -46,7 +46,7 @@ public class PuzzleController : MonoBehaviour
     
     private SettingsGame gameSettings;
     private bool isWin;
-    private PuzzleState DataPuzzleState;
+    private PuzzleStateList DataPuzzleState;
 
     public void Clear()
     {
@@ -239,14 +239,49 @@ public class PuzzleController : MonoBehaviour
     
     public void NewGame()
     {
-        DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
-        InitView(DataPuzzleState.puzzleDatas);
+        
+        InitGameState();
+
+        string ID = originalImage.sprite.name;
+        
+        foreach (var panel in imageManager.backgroundPanels)
+        {
+            panel.sprite = backgroundImage.sprite;
+        }
+
+        if (DataPuzzleState == null)
+        {
+            PuzzleState puzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+            puzzleState.puzzleID = ID;
+            DataPuzzleState = new PuzzleStateList();
+            DataPuzzleState.puzzleStates.Add(puzzleState);
+            
+            Debug.Log("puzzleCreator");
+            InitView(puzzleState.puzzleDatas);
+        }
+        else
+        {
+            foreach (var pID in DataPuzzleState.puzzleStates)
+            {
+                if (pID.puzzleID == ID)
+                {
+                    Debug.Log(pID.puzzleID);
+                    InitView(pID.puzzleDatas);
+                    break;
+                }
+            }
+            PuzzleState puzState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+            puzState.puzzleID = ID;
+            DataPuzzleState.puzzleStates.Add(puzState);
+            InitView(puzState.puzzleDatas);
+        }
+        //InitView(DataPuzzleState.puzzleStates);
     }
     
     
-    private void InitGameState()
+    private void InitGameState()//надо делать вообще где нить в Awake
     {
-        DataPuzzleState = ToolSaver.Instance.Load<PuzzleState>(gameSettings.PathSaves);
+        DataPuzzleState = ToolSaver.Instance.Load<PuzzleStateList>(gameSettings.PathSaves);
     }
 
     public void SaveGameState()

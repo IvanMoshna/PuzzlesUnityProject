@@ -6,7 +6,9 @@ using UnityEngine;
 [Serializable]
 public class PuzzleState
 {
+    public string puzzleID;
     public List<PuzzleData> puzzleDatas;
+    private bool isCollected;
 
     public PuzzleState()
     {

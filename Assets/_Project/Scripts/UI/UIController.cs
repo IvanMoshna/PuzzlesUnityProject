@@ -17,11 +17,15 @@ public class UIController : MonoBehaviour
         GameScreen.SetActive(false);
         MenuScreen.SetActive(false);
     }
-
-
     private void Awake()
     {
         DisableAll();
         MenuScreen.SetActive(true);
+    }
+
+    public void GoToGAmeScreen()
+    {
+        DisableAll();
+        GameScreen.SetActive(true);
     }
 }
