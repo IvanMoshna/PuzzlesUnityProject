@@ -44,5 +44,6 @@ public class UIContinueScreen : MonoBehaviour
         controller.UIController.GetComponent<UIController>().GoToGameScreen();
         controller.InitView(controller.currentState.puzzleDatas);
         
+
     }
 }

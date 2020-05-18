@@ -37,17 +37,22 @@ public class PuzzleController : MonoBehaviour
     [Space] 
     public int wCell;
     public int hCell;
-
+    public int progressCount;
+    public int winCount;
+    
     public List<Vector2> posedPositions;
     public List<GameObject> shadowsList;
 
     [Space] 
     public Content content;
     
-    private SettingsGame gameSettings;
-    private bool isWin;
+    [Space]
     public PuzzleStateList DataPuzzleState;
     public PuzzleState currentState;
+
+    private SettingsGame gameSettings;
+    private bool isWin;
+    
 
     public void Clear()
     {
@@ -115,8 +120,8 @@ public class PuzzleController : MonoBehaviour
                 if (elementPosition.y < minY) minY = (int) elementPosition.y;
                 if (elementPosition.y > maxY) maxY = (int) elementPosition.y;
             }
-            
-            
+
+
             Texture2D tex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
             Texture2D backgroundTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
             Texture2D gridTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
@@ -176,6 +181,7 @@ public class PuzzleController : MonoBehaviour
             puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
             puzzleItem.backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             puzzleItem.canvas = this.canvas;
+            puzzleItem.progressItemCount = puzzleItem.elementPositions.Count; 
             
             var puzzleItemGridImage = puzzleItem.gridImage;
             shadowsList.Add(puzzleItemGridImage);
@@ -220,23 +226,7 @@ public class PuzzleController : MonoBehaviour
     private void Start()
     {
         gameSettings = ToolBox.Get<SettingsGame>();
-
-
-
-        /*originalImage.gameObject.SetActive(true);
-        //Clear();
-        InitGameState();
-        if (DataPuzzleState == null)
-        {
-            //DataPuzzleState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
-            NewGame();
-        }
-        else
-        {
-            UIController.GetComponent<UIController>().ContinueScreen.SetActive(true);
-            InitView(DataPuzzleState.puzzleDatas);
-        }*/
-        //InitView(DataPuzzleState.puzzleDatas);
+        winCount = gameSettings.columns * gameSettings.lines-1;//TODO: ПОНЯТЬ ПОЧЕМУ 63
 
     }
     
@@ -290,11 +280,35 @@ public class PuzzleController : MonoBehaviour
                 InitView(puzState.puzzleDatas);
                 UIController.GetComponent<UIController>().GoToGameScreen();
             }
+
+            /*progressCount = InitProgress(currentState);
+            currentState.progressCount = progressCount;*/
+            UpdateProgress();
         }
         //InitView(DataPuzzleState.puzzleStates);
     }
 
-    private void InitGameState()//надо делать вообще где нить в Awake
+    public int InitProgress(PuzzleState puzzleState)
+    {
+        int counter=0;
+
+            foreach (var pData in puzzleState.puzzleDatas)
+            {
+                if (pData.isPosed)
+                {
+                    counter += pData.puzzleData.Count;
+                }
+            }
+            return counter;
+    }
+
+    public void UpdateProgress()
+    {
+        progressCount = InitProgress(currentState);
+        currentState.progressCount = progressCount;
+    }
+    
+    private void InitGameState()
     {
         DataPuzzleState = ToolSaver.Instance.Load<PuzzleStateList>(gameSettings.PathSaves);
     }
@@ -314,7 +328,7 @@ public class PuzzleController : MonoBehaviour
                     break;
                 }
             }
-
+            
             DataPuzzleState.puzzleStates.Add(currentState);
             currentState = null;
         }
@@ -322,10 +336,9 @@ public class PuzzleController : MonoBehaviour
         if (gameSettings.IsSaveGame)
         {
             ToolSaver.Instance.Save(gameSettings.PathSaves, DataPuzzleState);
-                //TODO: нужно обновлять DataPuzzleState перед сохранением.
         }
     }
-
+    
     public void RefreshData(PuzzleState currentData, PuzzleStateList dataList)
     {
         foreach (var dataItem in dataList.puzzleStates)

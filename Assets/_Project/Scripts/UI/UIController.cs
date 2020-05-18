@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -38,11 +39,12 @@ public class UIController : MonoBehaviour
     public void GoToMenuScreen()
     {
         var controller = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
-        //controller.RefreshData(controller.currentState, controller.DataPuzzleState);
-        //controller.currentState = null;
+
+        controller.progressCount = 0;
         controller.SaveGameState();
         controller.Clear();
         DisableAll();
         MenuScreen.SetActive(true);
+
     }
 }

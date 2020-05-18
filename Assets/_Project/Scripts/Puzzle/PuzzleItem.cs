@@ -26,7 +26,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public Canvas canvas;
 
     public List<Vector2> elementPositions;
-
+    public int progressItemCount;
+    
     private bool isDraggable;
     private bool isFramed;
     private RectTransform rtPuzzleImage;
@@ -40,6 +41,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private SettingsGame settingsGame;
     private Vector2 offsetToCenter;
     private Vector2 offsetToShadow;
+    
 
     private void Start()
     {
@@ -128,17 +130,9 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             gridImage.SetActive(false);
             transform.SetParent(puzzleController.DragParent, true);
             puzzleImage.transform.SetParent(this.transform,true);
-
             
+          
 
-            //repeat pattern
-            /*foreach (var bg in imageManager.backgroundPanels)
-            {
-                Vector3 pos = transform.localPosition;
-                GameObject puzzleClone = Instantiate(gameObject, bg.transform);
-                puzzleClone.transform.localPosition = pos;
-
-            }*/
             RepeatPattern(imageManager.backgroundPanels, gameObject);
 
             
@@ -146,6 +140,19 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             {
                 puzzleController.posedPositions.Add(new Vector2(pos.x*128, pos.y*128));//добавляем позиции поставленного пазла    
             }
+            
+            
+
+            puzzleController.UpdateProgress();
+
+            if (puzzleController.progressCount == puzzleController.winCount)
+            {
+                //TODO:вызывать какую нибудь функцию WIN   
+                Debug.Log("U WIN!!!!");
+            }
+            
+            
+            
 
             //TODO: ПОФИКСИТЬ ВОЗМОЖНЫЕ ПОЗИЦИИ ТЕНЕЙ, КОГДА ДРУГОЙ ПАЗЛ УЖЕ ПОСТАВЛЕН
             /*var shadowsList = puzzleController.shadowsList;// список теней

@@ -95,8 +95,10 @@ public class PuzzlesCreator : MonoBehaviour
                 
                 //createdPuzzles.Add(blockCells);
                 createdPuzzles.Add(blockCells);
+                
 
                 counter++;
+                Debug.Log("COUNTER = " + counter);
             }
         }
 

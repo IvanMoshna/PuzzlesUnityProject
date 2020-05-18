@@ -100,6 +100,8 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			var icon = newOrRecycled.pattenIcon.transform.GetChild(0);
 			icon.GetComponent<Image>().sprite = colorSprite;
 
+			/*var fillImage = newOrRecycled.sliderIcon.fillRect.GetChild(0).GetComponent<Image>();
+			fillImage.sprite = colorSprite;*/
 			//newOrRecycled.backgroundImage.color = model.color;
 			//newOrRecycled.titleText.text = model.title + " #" + newOrRecycled.ItemIndex;
 
@@ -213,7 +215,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 		public Image backgroundIcon;
 		//public Text text;
 		public Image pattenIcon;
-		
+		//public Slider sliderIcon;
 
 
 		// Retrieving the views from the item's root GameObject
@@ -227,6 +229,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			//views.GetComponentAtPath("Icon", out icon);
 			views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
 			views.GetComponentAtPath("PatternIcon", out pattenIcon);
+			//views.GetComponentAtPath("Slider", out sliderIcon);
 			//views.GetComponentAtPath("Text", out text);
 			
 			

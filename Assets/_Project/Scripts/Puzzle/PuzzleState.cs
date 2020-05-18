@@ -8,7 +8,8 @@ public class PuzzleState
 {
     public string puzzleID;
     public List<PuzzleData> puzzleDatas;
-    private bool isCollected;
+    public int progressCount;
+    public bool isCollected;
 
     public PuzzleState()
     {
