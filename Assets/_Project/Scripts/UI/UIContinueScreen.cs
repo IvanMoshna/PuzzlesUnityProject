@@ -8,21 +8,41 @@ public class UIContinueScreen : MonoBehaviour
 {
     private SettingsGame settingsGame;
     public PuzzleController controller;
+    private SettingsGame gameSettings;
     
     public void Awake()
     {
         settingsGame = ToolBox.Get<SettingsGame>();
+        gameSettings = ToolBox.Get<SettingsGame>();
     }
 
     public void OnNewGameButtonClick()
     {
-        controller.Clear();
-        controller.NewGame();
-        controller.UIController.GetComponent<UIController>().ContinueScreen.SetActive(false);
+        Debug.Log("OnContinuePuzzleClick");
+        controller.UIController.GetComponent<UIController>().GoToGameScreen();
+        PuzzleState puzState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+        
+        ////////
+        foreach (var dataItem in controller.DataPuzzleState.puzzleStates)
+        {
+            if (dataItem.puzzleID == controller.originalImage.sprite.name)
+            {
+                controller.DataPuzzleState.puzzleStates.Remove(dataItem);
+                break;
+            }
+        }
+        ////
+        controller.DataPuzzleState.puzzleStates.Add(puzState);
+        puzState.puzzleID = controller.originalImage.sprite.name;
+        controller.currentState = puzState;
+        controller.InitView(puzState.puzzleDatas);
     }
-    
+
     public void OnContinueButtonClick()
     {
-        gameObject.SetActive(false);
+        Debug.Log("OnContinuePuzzleClick");
+        controller.UIController.GetComponent<UIController>().GoToGameScreen();
+        controller.InitView(controller.currentState.puzzleDatas);
+        
     }
 }

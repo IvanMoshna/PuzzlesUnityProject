@@ -32,5 +32,17 @@ public class UIController : MonoBehaviour
     public void OnContinueScreen()
     {
         ContinueScreen.SetActive(true);
+        
+    }
+
+    public void GoToMenuScreen()
+    {
+        var controller = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+        //controller.RefreshData(controller.currentState, controller.DataPuzzleState);
+        //controller.currentState = null;
+        controller.SaveGameState();
+        controller.Clear();
+        DisableAll();
+        MenuScreen.SetActive(true);
     }
 }

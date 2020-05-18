@@ -7,7 +7,6 @@ public class UIMenuButtonController : MonoBehaviour
 {
     [Space]
     public PuzzleController puzzleController;
-    public UIController uiController;
 
     [Space] 
     public Image icon;
@@ -16,10 +15,11 @@ public class UIMenuButtonController : MonoBehaviour
     
     public void OnPuzzleChoseClick()
     {
-        uiController.GoToGameScreen();
+        Debug.Log("OnPuzzleButtonClick");
         puzzleController.originalImage.sprite = icon.sprite;
         puzzleController.backgroundImage.sprite = backgrounIcon.sprite;
         puzzleController.NewGame();
+        
     }
     
 }

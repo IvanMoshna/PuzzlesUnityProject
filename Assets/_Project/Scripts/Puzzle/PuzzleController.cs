@@ -46,7 +46,8 @@ public class PuzzleController : MonoBehaviour
     
     private SettingsGame gameSettings;
     private bool isWin;
-    private PuzzleStateList DataPuzzleState;
+    public PuzzleStateList DataPuzzleState;
+    public PuzzleState currentState;
 
     public void Clear()
     {
@@ -69,10 +70,12 @@ public class PuzzleController : MonoBehaviour
                 Destroy(bpImage.gameObject);
             }
         }
+        currentState = null;
     }
 
-    private void InitView(List<PuzzleData> puzzle) //нарезка текстуры
+    public void InitView(List<PuzzleData> puzzle) //нарезка текстуры
     {
+        Debug.Log("INIT VIEW");
         Texture2D mainTexture = originalImage.mainTexture as Texture2D;
         Texture2D backgroundTexture = backgroundImage.mainTexture as Texture2D;
         Texture2D gridTexture = gridImage.mainTexture as Texture2D;
@@ -255,31 +258,42 @@ public class PuzzleController : MonoBehaviour
             puzzleState.puzzleID = ID;
             DataPuzzleState = new PuzzleStateList();
             DataPuzzleState.puzzleStates.Add(puzzleState);
+            currentState = puzzleState;
             
             Debug.Log("puzzleCreator");
             InitView(puzzleState.puzzleDatas);
+            UIController.GetComponent<UIController>().GoToGameScreen();
         }
         else
         {
+            bool isInited = false;
             foreach (var pID in DataPuzzleState.puzzleStates)
             {
                 if (pID.puzzleID == ID)
                 {
-                    //UIController.GetComponent<UIController>().OnContinueScreen();
+                    currentState = pID;
+                    UIController.GetComponent<UIController>().OnContinueScreen();
+                    //затем смотрим чо нажмет и только потом вызываем InitView
                     Debug.Log(pID.puzzleID);
-                    InitView(pID.puzzleDatas);
+                    //InitView(pID.puzzleDatas);
+                    isInited = true;
                     break;
                 }
             }
-            PuzzleState puzState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
-            puzState.puzzleID = ID;
-            DataPuzzleState.puzzleStates.Add(puzState);
-            InitView(puzState.puzzleDatas);
+
+            if (!isInited)
+            {
+                PuzzleState puzState = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
+                puzState.puzzleID = ID;
+                currentState = puzState;
+                DataPuzzleState.puzzleStates.Add(puzState);
+                InitView(puzState.puzzleDatas);
+                UIController.GetComponent<UIController>().GoToGameScreen();
+            }
         }
         //InitView(DataPuzzleState.puzzleStates);
     }
-    
-    
+
     private void InitGameState()//надо делать вообще где нить в Awake
     {
         DataPuzzleState = ToolSaver.Instance.Load<PuzzleStateList>(gameSettings.PathSaves);
@@ -287,11 +301,43 @@ public class PuzzleController : MonoBehaviour
 
     public void SaveGameState()
     {
+        Debug.Log("SAVE");
+        if (currentState != null)
+        {
+            foreach (var dataItems in DataPuzzleState.puzzleStates)
+            {
+                if (dataItems.puzzleID == currentState.puzzleID)
+                {
+                    //TODO: что то не то он удаляет
+                    DataPuzzleState.puzzleStates.Remove(dataItems);
+                    Debug.Log("Remove");
+                    break;
+                }
+            }
+
+            DataPuzzleState.puzzleStates.Add(currentState);
+            currentState = null;
+        }
+
         if (gameSettings.IsSaveGame)
         {
             ToolSaver.Instance.Save(gameSettings.PathSaves, DataPuzzleState);
+                //TODO: нужно обновлять DataPuzzleState перед сохранением.
         }
     }
-    
+
+    public void RefreshData(PuzzleState currentData, PuzzleStateList dataList)
+    {
+        foreach (var dataItem in dataList.puzzleStates)
+        {
+            if (dataItem.puzzleID == currentData.puzzleID)
+            {
+                dataList.puzzleStates.Remove(dataItem);
+                break;
+            }
+        }
+        dataList.puzzleStates.Add(currentData);
+        //currentData = null;
+    }
     private void OnApplicationQuit() { SaveGameState(); }
 }
