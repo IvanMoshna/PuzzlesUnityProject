@@ -96,10 +96,22 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			newOrRecycled.backgroundIcon.sprite = bwSprite;
 			newOrRecycled.pattenIcon.sprite = patternsSprites[UnityEngine.Random.Range(0, patternsSprites.Length)];
 			newOrRecycled.pattenIcon.SetNativeSize();
-			Debug.Log("Update");
+			//Debug.Log("Update");
 			var icon = newOrRecycled.pattenIcon.transform.GetChild(0);
 			icon.GetComponent<Image>().sprite = colorSprite;
 
+			var puzzleController = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
+			var progressList = puzzleController.DataPuzzleState;
+			var winCount = puzzleController.winCount;
+			foreach (var progress in progressList.puzzleStates)
+			{
+				if (model.originalImageID == progress.puzzleID)
+				{
+					newOrRecycled.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount = (float)progress.progressCount / winCount;
+					break;
+				}
+			}
+			
 			/*var fillImage = newOrRecycled.sliderIcon.fillRect.GetChild(0).GetComponent<Image>();
 			fillImage.sprite = colorSprite;*/
 			//newOrRecycled.backgroundImage.color = model.color;
@@ -211,30 +223,20 @@ namespace Your.Namespace.Here20May12044942767.Grids
 	public class MyGridItemViewsHolder : CellViewsHolder
 	{
 		
-		//public Image icon;
 		public Image backgroundIcon;
-		//public Text text;
 		public Image pattenIcon;
-		//public Slider sliderIcon;
-
+		public Image currentProgress;
 
 		// Retrieving the views from the item's root GameObject
 		public override void CollectViews()
 		{
 			base.CollectViews();
-
 			// GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
 			// which infers the variable's component from its type, so you won't need to specify it yourself
 			
-			//views.GetComponentAtPath("Icon", out icon);
 			views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
 			views.GetComponentAtPath("PatternIcon", out pattenIcon);
-			//views.GetComponentAtPath("Slider", out sliderIcon);
-			//views.GetComponentAtPath("Text", out text);
-			
-			
-			
-			
+			views.GetComponentAtPath("BackgroundProgressbar", out currentProgress);
 			
 		}
 		

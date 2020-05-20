@@ -98,7 +98,7 @@ public class PuzzlesCreator : MonoBehaviour
                 
 
                 counter++;
-                Debug.Log("COUNTER = " + counter);
+                //Debug.Log("COUNTER = " + counter);
             }
         }
 

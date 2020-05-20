@@ -143,13 +143,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             
             
 
-            puzzleController.UpdateProgress();
-
-            if (puzzleController.progressCount == puzzleController.winCount)
-            {
-                //TODO:вызывать какую нибудь функцию WIN   
-                Debug.Log("U WIN!!!!");
-            }
+           
             
             
             
@@ -205,6 +199,14 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             
             isDraggable = false;
             puzzleData.isPosed = true;
+            
+            puzzleController.UpdateProgress();
+
+            if (puzzleController.progressCount == puzzleController.winCount)
+            {
+                //TODO:вызывать какую нибудь функцию WIN   
+                Debug.Log("U WIN!!!!");
+            }
         }
         else
         {

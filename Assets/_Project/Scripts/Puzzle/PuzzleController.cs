@@ -33,6 +33,7 @@ public class PuzzleController : MonoBehaviour
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public Canvas canvas;
+    public BasicGridAdapter osa;
 
     [Space] 
     public int wCell;
@@ -101,13 +102,14 @@ public class PuzzleController : MonoBehaviour
         hCell = h_cell;
         //List<PuzzleData> puzzle = PuzzlesCreator.CreatePuzzle(gameSettings.lines, gameSettings.columns);
         //PuzzleState puzzleState = new PuzzleState(puzzle);
-
+        var shuffledList = new List<GameObject>();
         foreach (var block in puzzle)
         {
             GameObject blockParent = Instantiate(puzzlePrefab, transform, false);
             var puzzleBlock = blockParent.GetComponent<PuzzleItem>();
             puzzleBlock.ScrollParent = scrollViewContent;
-
+            
+            
             puzzleBlock.imageManager = imageManager;
             int minX = Int32.MaxValue;
             int maxX = 0;
@@ -193,7 +195,9 @@ public class PuzzleController : MonoBehaviour
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
 
-            if (puzzleBlock.puzzleData.isPosed)
+            shuffledList.Add(blockParent);
+            
+            /*if (puzzleBlock.puzzleData.isPosed)
             {
                 
                 blockParent.transform.SetParent(DragParent);
@@ -202,9 +206,28 @@ public class PuzzleController : MonoBehaviour
             else
             {
                 blockParent.transform.SetParent(scrollViewContent.transform);
-            }
+            }*/
 
         }
+        
+        if(gameSettings.isShuffled)
+            shuffledList.Shuffle();
+        foreach (var item in shuffledList)
+        {
+            if (item.GetComponent<PuzzleItem>().puzzleData.isPosed)
+            {
+                
+                item.transform.SetParent(DragParent);
+                
+            }
+            else
+            {
+                item.transform.SetParent(scrollViewContent.transform);
+            }
+        }
+        
+        
+        
         this.NextFrame(SetPreferedContentSize);
         originalImage.gameObject.SetActive(false);
     }
@@ -226,14 +249,14 @@ public class PuzzleController : MonoBehaviour
     private void Start()
     {
         gameSettings = ToolBox.Get<SettingsGame>();
-        winCount = gameSettings.columns * gameSettings.lines-1;//TODO: ПОНЯТЬ ПОЧЕМУ 63
-
+        winCount = gameSettings.columns * gameSettings.lines;
+        InitGameState();
     }
     
     public void NewGame()
     {
         
-        InitGameState();
+        //InitGameState();
 
         string ID = originalImage.sprite.name;
         
@@ -283,8 +306,9 @@ public class PuzzleController : MonoBehaviour
 
             /*progressCount = InitProgress(currentState);
             currentState.progressCount = progressCount;*/
-            UpdateProgress();
+            
         }
+        //UpdateProgress();
         //InitView(DataPuzzleState.puzzleStates);
     }
 
@@ -304,6 +328,7 @@ public class PuzzleController : MonoBehaviour
 
     public void UpdateProgress()
     {
+        Debug.Log("Update Progress");
         progressCount = InitProgress(currentState);
         currentState.progressCount = progressCount;
     }

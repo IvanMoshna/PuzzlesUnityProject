@@ -36,6 +36,7 @@ public class UIContinueScreen : MonoBehaviour
         puzState.puzzleID = controller.originalImage.sprite.name;
         controller.currentState = puzState;
         controller.InitView(puzState.puzzleDatas);
+        controller.UpdateProgress();
     }
 
     public void OnContinueButtonClick()
@@ -43,7 +44,7 @@ public class UIContinueScreen : MonoBehaviour
         Debug.Log("OnContinuePuzzleClick");
         controller.UIController.GetComponent<UIController>().GoToGameScreen();
         controller.InitView(controller.currentState.puzzleDatas);
-        
+        controller.UpdateProgress();
 
     }
 }

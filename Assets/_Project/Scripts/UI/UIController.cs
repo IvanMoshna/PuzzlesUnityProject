@@ -39,7 +39,8 @@ public class UIController : MonoBehaviour
     public void GoToMenuScreen()
     {
         var controller = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
-
+        //TODO: вызвать Update в BasicGridAdapter
+        
         controller.progressCount = 0;
         controller.SaveGameState();
         controller.Clear();
