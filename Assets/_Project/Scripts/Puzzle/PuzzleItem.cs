@@ -198,7 +198,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
             if (puzzleController.progressCount == puzzleController.winCount)
             {
-                //TODO:вызывать какую нибудь функцию WIN   
+                var gameScreen = GameObject.Find("GameScreen").GetComponent<UIGameScreen>();
+                gameScreen.SetGamePanelsWinPositions();
                 Debug.Log("U WIN!!!!");
             }
         }
