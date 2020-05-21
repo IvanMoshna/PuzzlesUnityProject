@@ -8,4 +8,5 @@ public class PuzzleSource
 {
     public string originalImageID;
     public string backgroundImageID;
+    public int pattrenIcon;
 }

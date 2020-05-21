@@ -58,6 +58,12 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			var content = ToolBox.Get<Content>();
 			Data = new SimpleDataHelper<PuzzleSource>(this);
 			Data.InsertItemsAtStart(content.puzzleSources);
+
+			foreach (var item in Data)
+			{
+				item.pattrenIcon = UnityEngine.Random.Range(0, patternsSprites.Length);
+				//Debug.Log(item.pattrenIcon);
+			}
 			// Calling this initializes internal data and prepares the adapter to handle item count changes
 			
 			/*List<Sprite> iconsColor = new List<Sprite>();
@@ -70,7 +76,13 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// Retrieve the models from your data source and set the items count
 
 			RetrieveDataAndUpdate(Data.Count);
-			
+		}
+
+		private void OnEnable()
+		{
+			Debug.Log("ONENABLE");
+			Debug.Log("Data = " + Data);
+			Data?.NotifyListChangedExternally();
 		}
 
 		// This is called anytime a previously invisible item become visible, or after it's created, 
@@ -94,7 +106,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			Sprite bwSprite = Resources.Load<Sprite>(pathBW);
 			//newOrRecycled.icon.sprite = colorSprite;
 			newOrRecycled.backgroundIcon.sprite = bwSprite;
-			newOrRecycled.pattenIcon.sprite = patternsSprites[UnityEngine.Random.Range(0, patternsSprites.Length)];
+			newOrRecycled.pattenIcon.sprite = patternsSprites[model.pattrenIcon];
 			newOrRecycled.pattenIcon.SetNativeSize();
 			//Debug.Log("Update");
 			var icon = newOrRecycled.pattenIcon.transform.GetChild(0);

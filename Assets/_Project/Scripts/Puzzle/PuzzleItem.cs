@@ -142,12 +142,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             }
             
             
-
-           
-            
-            
-            
-
             //TODO: ПОФИКСИТЬ ВОЗМОЖНЫЕ ПОЗИЦИИ ТЕНЕЙ, КОГДА ДРУГОЙ ПАЗЛ УЖЕ ПОСТАВЛЕН
             /*var shadowsList = puzzleController.shadowsList;// список теней
             foreach (var shadow in shadowsList)

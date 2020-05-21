@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f975e39e5f944f54c83ae71cd694eac8
+guid: d30a506905c70ac40ac412303a0e5b51
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -20,7 +20,7 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-  isReadable: 1
+  isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
@@ -82,7 +82,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: iPhone
-    maxTextureSize: 2048
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: 4
     textureCompression: 1
@@ -108,7 +108,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: ad44ab9762b4fe2438fa30b01d8afef9
+    spriteID: ddf0d20fed7548645bafdccd53b6c606
     internalID: 0
     vertices: []
     indices: 
