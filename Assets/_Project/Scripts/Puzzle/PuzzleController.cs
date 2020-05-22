@@ -211,6 +211,7 @@ public class PuzzleController : MonoBehaviour
         foreach (var item in shuffledList)
         {
             allPuzzlesList.Add(item.GetComponent<PuzzleItem>().puzzleImage);
+            var rtItem = item.GetComponent<RectTransform>();
             if (item.GetComponent<PuzzleItem>().puzzleData.isPosed)
             {
                 item.transform.SetParent(DragParent);

@@ -213,7 +213,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     public void RepeatPattern(List<Image> images, GameObject go)
     {
-        Debug.Log("REPEAT");
+        //Debug.Log("REPEAT");
         foreach (var bg in images)
         {
             Vector3 pos = go.transform.localPosition;
