@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Common;
 using UnityEngine;
@@ -16,7 +17,8 @@ public class UIGameScreen : MonoBehaviour
     public float duration;
     public GameObject topWinPosition;
     public GameObject topGamePosition;
-    
+
+    private PuzzleController controller;
     
     public void SetGamePanelsWinPositions()
     {
@@ -58,5 +60,5 @@ public class UIGameScreen : MonoBehaviour
         lowerPanel.transform.DOMoveY(0, duration);
         winPanel.transform.DOMoveY(-200, duration);
     }
-    
+
 }

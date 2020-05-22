@@ -59,8 +59,8 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         if (puzzleData.isPosed)
         {
             Vector2 puzDataPos = new Vector2(puzzleData.puzzlePosition.x, puzzleData.puzzlePosition.y);
-            rtPuzzleImage.transform.SetParent(puzzleController.DragParent, false);            
-
+            rtPuzzleImage.transform.SetParent(puzzleController.DragParent, false);  
+            
             puzzleImage.transform.localPosition = puzDataPos;
             rtPuzzleImage.anchoredPosition = puzDataPos;
             
@@ -71,7 +71,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             RepeatPattern(imageManager.backgroundPanels, rtPuzzleImage.gameObject);
 
         }
-
+        puzzleController.SetAlphaToPuzzles(puzzleController.progressCount, puzzleController.winCount);
     }
 
     private void Update()
@@ -128,20 +128,29 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
             gridImage.SetActive(false);
-            transform.SetParent(puzzleController.DragParent, true);
             puzzleImage.transform.SetParent(this.transform,true);
+            transform.SetParent(puzzleController.DragParent, true);
             
-          
-
+            
             RepeatPattern(imageManager.backgroundPanels, gameObject);
-
             
             foreach (var pos in elementPositions)
             {
                 puzzleController.posedPositions.Add(new Vector2(pos.x*128, pos.y*128));//добавляем позиции поставленного пазла    
             }
             
+            isDraggable = false;
+            puzzleData.isPosed = true;
             
+            puzzleController.UpdateProgress();
+            puzzleController.SetAlphaToPuzzles(puzzleController.progressCount, puzzleController.winCount);
+            
+            if (puzzleController.progressCount == puzzleController.winCount)
+            {
+                var gameScreen = GameObject.Find("GameScreen").GetComponent<UIGameScreen>();
+                gameScreen.SetGamePanelsWinPositions();
+                Debug.Log("U WIN!!!!");
+            }
             //TODO: ПОФИКСИТЬ ВОЗМОЖНЫЕ ПОЗИЦИИ ТЕНЕЙ, КОГДА ДРУГОЙ ПАЗЛ УЖЕ ПОСТАВЛЕН
             /*var shadowsList = puzzleController.shadowsList;// список теней
             foreach (var shadow in shadowsList)
@@ -190,18 +199,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
                 
                 
             }*/
-            
-            isDraggable = false;
-            puzzleData.isPosed = true;
-            
-            puzzleController.UpdateProgress();
-
-            if (puzzleController.progressCount == puzzleController.winCount)
-            {
-                var gameScreen = GameObject.Find("GameScreen").GetComponent<UIGameScreen>();
-                gameScreen.SetGamePanelsWinPositions();
-                Debug.Log("U WIN!!!!");
-            }
         }
         else
         {
@@ -216,11 +213,19 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     public void RepeatPattern(List<Image> images, GameObject go)
     {
+        Debug.Log("REPEAT");
         foreach (var bg in images)
         {
             Vector3 pos = go.transform.localPosition;
             GameObject puzzleClone = Instantiate(go, bg.transform);
             puzzleClone.transform.localPosition = pos;
+            var puzItemScript = go.GetComponent<PuzzleItem>();
+            if(puzItemScript == null)
+                puzzleController.allPuzzlesList.Add(puzzleClone);
+            else
+            {
+                puzzleController.allPuzzlesList.Add(puzzleClone.GetComponent<PuzzleItem>().puzzleImage);
+            }
         }
     }
 

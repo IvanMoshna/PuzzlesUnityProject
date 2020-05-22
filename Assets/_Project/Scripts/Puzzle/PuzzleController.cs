@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
+using UnityEngine.tvOS;
 using UnityEngine.UI;
 using Your.Namespace.Here20May12044942767.Grids;
 using Image = UnityEngine.UI.Image;
@@ -40,9 +41,11 @@ public class PuzzleController : MonoBehaviour
     public int hCell;
     public int progressCount;
     public int winCount;
+    public float startTransparency;
     
     public List<Vector2> posedPositions;
     public List<GameObject> shadowsList;
+    public List<GameObject> allPuzzlesList;
 
     [Space] 
     public Content content;
@@ -77,6 +80,7 @@ public class PuzzleController : MonoBehaviour
             }
         }
         currentState = null;
+        allPuzzlesList.Clear();
     }
 
     public void InitView(List<PuzzleData> puzzle) //нарезка текстуры
@@ -173,6 +177,10 @@ public class PuzzleController : MonoBehaviour
             puzzleBlock.puzzleImage = newPuzzle;
             //this.NextFrame(()=>newPuzzle.transform.localScale=Vector3.one);
             newPuzzle.GetComponent<Image>().sprite = sprite;
+            
+            if(gameSettings.isTransparency)
+                newPuzzle.GetComponent<Image>().color = new Color(1,1,1,startTransparency);//сетаем начальную прозрачность пазла
+            
             newPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
 
             puzzleBlock.puzzleController = this;
@@ -196,29 +204,16 @@ public class PuzzleController : MonoBehaviour
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
 
             shuffledList.Add(blockParent);
-            
-            /*if (puzzleBlock.puzzleData.isPosed)
-            {
-                
-                blockParent.transform.SetParent(DragParent);
-                
-            }
-            else
-            {
-                blockParent.transform.SetParent(scrollViewContent.transform);
-            }*/
-
         }
         
         if(gameSettings.isShuffled)
             shuffledList.Shuffle();
         foreach (var item in shuffledList)
         {
+            allPuzzlesList.Add(item.GetComponent<PuzzleItem>().puzzleImage);
             if (item.GetComponent<PuzzleItem>().puzzleData.isPosed)
             {
-                
                 item.transform.SetParent(DragParent);
-                
             }
             else
             {
@@ -226,12 +221,21 @@ public class PuzzleController : MonoBehaviour
             }
         }
         
-        
-        
         this.NextFrame(SetPreferedContentSize);
         originalImage.gameObject.SetActive(false);
     }
 
+    public void SetAlphaToPuzzles(int progress, int winProgress)
+    {
+        foreach (var item in allPuzzlesList)
+        {
+            float ratio =(float) ((double)progress/(double)winProgress);
+            float itemAlpha = 0.5f + ratio*0.5f;
+            var colorToItem = new Color(1,1,1,itemAlpha);
+            item.GetComponent<Image>().color = colorToItem;
+        }
+    }
+    
     public void SetPreferedContentSize()
     {
         var layoutGroup = scrollViewContent.GetComponent<HorizontalLayoutGroup>();
@@ -310,6 +314,7 @@ public class PuzzleController : MonoBehaviour
         }
         //UpdateProgress();
         //InitView(DataPuzzleState.puzzleStates);
+        //SetAlphaToPuzzles(progressCount);
     }
 
     public int InitProgress(PuzzleState puzzleState)
@@ -331,6 +336,7 @@ public class PuzzleController : MonoBehaviour
         Debug.Log("Update Progress");
         progressCount = InitProgress(currentState);
         currentState.progressCount = progressCount;
+        //SetAlphaToPuzzles(progressCount, winCount);
     }
     
     private void InitGameState()

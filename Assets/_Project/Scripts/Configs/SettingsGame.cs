@@ -21,6 +21,7 @@ namespace Puzzles.Configs
         public float DragDelta;
         
         public bool isShuffled;
+        public bool isTransparency;
 
         [Space]
         public bool IsSaveGame = true;
