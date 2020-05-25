@@ -80,8 +80,8 @@ namespace Your.Namespace.Here20May12044942767.Grids
 
 		private void OnEnable()
 		{
-			Debug.Log("ONENABLE");
-			Debug.Log("Data = " + Data);
+			//Debug.Log("ONENABLE");
+			//Debug.Log("Data = " + Data);
 			Data?.NotifyListChangedExternally();
 		}
 
@@ -119,8 +119,20 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			{
 				if (model.originalImageID == progress.puzzleID)
 				{
-					newOrRecycled.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount = (float)progress.progressCount / winCount;
-					break;
+					if (progress.progressCount / winCount == 1)
+					{
+						newOrRecycled.currentProgress.gameObject.SetActive(false);
+						newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = false;
+						break;
+					}
+					else
+					{
+						newOrRecycled.currentProgress.gameObject.SetActive(true);
+						newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = true;
+						newOrRecycled.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =
+							(float) progress.progressCount / winCount;
+						break;
+					}
 				}
 			}
 			
