@@ -354,13 +354,11 @@ public class PuzzleController : MonoBehaviour
             {
                 if (dataItems.puzzleID == currentState.puzzleID)
                 {
-                    //TODO: что то не то он удаляет
                     DataPuzzleState.puzzleStates.Remove(dataItems);
                     Debug.Log("Remove");
                     break;
                 }
             }
-            
             DataPuzzleState.puzzleStates.Add(currentState);
             currentState = null;
         }

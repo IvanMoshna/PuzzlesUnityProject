@@ -115,27 +115,29 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			var puzzleController = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
 			var progressList = puzzleController.DataPuzzleState;
 			var winCount = puzzleController.winCount;
-			foreach (var progress in progressList.puzzleStates)
+			if (progressList != null)
 			{
-				if (model.originalImageID == progress.puzzleID)
+				foreach (var progress in progressList.puzzleStates)
 				{
-					if (progress.progressCount / winCount == 1)
+					if (model.originalImageID == progress.puzzleID)
 					{
-						newOrRecycled.currentProgress.gameObject.SetActive(false);
-						newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = false;
-						break;
-					}
-					else
-					{
-						newOrRecycled.currentProgress.gameObject.SetActive(true);
-						newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = true;
-						newOrRecycled.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =
-							(float) progress.progressCount / winCount;
-						break;
+						if (progress.progressCount / winCount == 1)
+						{
+							newOrRecycled.currentProgress.gameObject.SetActive(false);
+							newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = false;
+							break;
+						}
+						else
+						{
+							newOrRecycled.currentProgress.gameObject.SetActive(true);
+							newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = true;
+							newOrRecycled.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =
+								(float) progress.progressCount / winCount;
+							break;
+						}
 					}
 				}
 			}
-			
 			/*var fillImage = newOrRecycled.sliderIcon.fillRect.GetChild(0).GetComponent<Image>();
 			fillImage.sprite = colorSprite;*/
 			//newOrRecycled.backgroundImage.color = model.color;
