@@ -51,7 +51,7 @@ public class CustomBuildHandler
 {
     static CustomBuildHandler()
     {
-        BuildPlayerWindow.RegisterBuildPlayerHandler(BuildWarningWizard.CreateWizard);
+        //BuildPlayerWindow.RegisterBuildPlayerHandler(BuildWarningWizard.CreateWizard);
     }
 }
 

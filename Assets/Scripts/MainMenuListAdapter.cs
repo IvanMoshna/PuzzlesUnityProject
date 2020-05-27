@@ -35,6 +35,7 @@ using frame8.Logic.Misc.Other.Extensions;
 using Com.TheFallenGames.OSA.CustomAdapters.GridView;
 using Com.TheFallenGames.OSA.DataHelpers;
 using Common;
+using UnityEngine.SocialPlatforms;
 using Random = System.Random;
 
 // The date was temporarily included in the namespace to prevent duplicate class names
@@ -65,9 +66,12 @@ namespace Your.Namespace.Here20May12044942767.Grids
 
 			foreach (var puzzleSource in content.puzzleSources)
 			{
+				puzzleSource.pattrenIcon = UnityEngine.Random.Range(0, patternsSprites.Length);
+
 				myModelList.Add(new MyGridItemModel(PuzzleItemType.ITEM, puzzleSource));
 			}
 			
+			myModelList.Add(new MyGridItemModel(PuzzleItemType.NONE, null));
 			myModelList.Add(new MyGridItemModel(PuzzleItemType.LAST, null));
 
 			Data.InsertItemsAtStart(myModelList);

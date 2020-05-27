@@ -18,7 +18,6 @@ public class MenuItemUniversal : MonoBehaviour
     
     public void DisableLayouts()
     {
-        Debug.Log("DISABLE");
         Title.SetActive(false);
         Item.SetActive(false);
         LastItem.SetActive(false);

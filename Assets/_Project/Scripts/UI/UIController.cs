@@ -29,13 +29,11 @@ public class UIController : MonoBehaviour
         DisableAll();
         GameScreen.SetActive(true);
     }
-
     public void OnContinueScreen()
     {
         ContinueScreen.SetActive(true);
         
     }
-
     public void GoToMenuScreen()
     {
         var controller = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
@@ -47,5 +45,10 @@ public class UIController : MonoBehaviour
         DisableAll();
         MenuScreen.SetActive(true);
 
+    }
+
+    public void OnPrivacyPolicyButtonClick()
+    {
+        Application.OpenURL("https://docs.google.com/document/d/1BIH9rky4C1LIo8PCVuTKyCEF2Z_1GEiOMMgn_97Z3zE/edit?usp=sharing");
     }
 }
