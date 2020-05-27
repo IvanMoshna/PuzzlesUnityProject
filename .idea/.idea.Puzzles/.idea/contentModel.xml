@@ -41,6 +41,7 @@
             <e p="SerializableVector.cs" t="Include" />
             <e p="ShapeGenerator.cs" t="Include" />
             <e p="UI" t="Include">
+              <e p="MenuItemUniversal.cs" t="Include" />
               <e p="UIContinueScreen.cs" t="Include" />
               <e p="UIController.cs" t="Include" />
               <e p="UIGameScreen.cs" t="Include" />
@@ -218,7 +219,7 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="BasicGridAdapter.cs" t="Include" />
+          <e p="MainMenuListAdapter.cs" t="Include" />
         </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />

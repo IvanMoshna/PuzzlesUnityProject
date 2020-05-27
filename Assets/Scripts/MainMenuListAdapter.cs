@@ -43,11 +43,11 @@ namespace Your.Namespace.Here20May12044942767.Grids
 {
 	// There is 1 important callback you need to implement: UpdateCellViewsHolder()
 	// See explanations below
-	public class BasicGridAdapter : GridAdapter<GridParams, MyGridItemViewsHolder>
+	public class MainMenuListAdapter : GridAdapter<GridParams, MyGridItemViewsHolder>
 	{
 		// Helper that stores data and notifies the adapter when items count changes
 		// Can be iterated and can also have its elements accessed by the [] operator
-		public SimpleDataHelper<PuzzleSource> Data { get; private set; }
+		public SimpleDataHelper<MyGridItemModel> Data { get; private set; }
 
 		public Sprite[] patternsSprites;
 		
@@ -56,14 +56,26 @@ namespace Your.Namespace.Here20May12044942767.Grids
 		{
 			base.Start();
 			var content = ToolBox.Get<Content>();
-			Data = new SimpleDataHelper<PuzzleSource>(this);
-			Data.InsertItemsAtStart(content.puzzleSources);
+			Data = new SimpleDataHelper<MyGridItemModel>(this);
+			
+			List<MyGridItemModel> myModelList = new List<MyGridItemModel>();
+			myModelList.Add(new MyGridItemModel(PuzzleItemType.TITLE, null));
+			myModelList.Add(new MyGridItemModel(PuzzleItemType.NONE, null));
 
-			foreach (var item in Data)
+			foreach (var puzzleSource in content.puzzleSources)
 			{
-				item.pattrenIcon = UnityEngine.Random.Range(0, patternsSprites.Length);
-				//Debug.Log(item.pattrenIcon);
+				myModelList.Add(new MyGridItemModel(PuzzleItemType.ITEM, puzzleSource));
 			}
+			
+			myModelList.Add(new MyGridItemModel(PuzzleItemType.LAST, null));
+
+			Data.InsertItemsAtStart(myModelList);
+
+			/*foreach (var item in Data)
+			{
+				item.puzzleSource.pattrenIcon = UnityEngine.Random.Range(0, patternsSprites.Length);
+				//Debug.Log(item.pattrenIcon);
+			}*/
 			// Calling this initializes internal data and prepares the adapter to handle item count changes
 			
 			/*List<Sprite> iconsColor = new List<Sprite>();
@@ -95,21 +107,40 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// index of item that should be represented by this views holder. You'll use this index
 			// to retrieve the model from your data set
 			
-			PuzzleSource model = Data[newOrRecycled.ItemIndex];
+			MyGridItemModel model = Data[newOrRecycled.ItemIndex];
+
+			if (model.Type == PuzzleItemType.NONE)
+			{
+				newOrRecycled.menuItemUniversal.DisableLayouts();
+				return;
+			}
+			if (model.Type == PuzzleItemType.LAST)
+			{
+				newOrRecycled.menuItemUniversal.DisableLayouts();
+				newOrRecycled.menuItemUniversal.LastItem.SetActive(true);
+				return;
+			}
+			if (model.Type == PuzzleItemType.TITLE)
+			{
+				newOrRecycled.menuItemUniversal.DisableLayouts();
+				newOrRecycled.menuItemUniversal.Title.SetActive(true);
+				return;
+			}
 			//ЗДЕСЬ ПИХАЕМ КАРТИНКИ
 			
-			//newOrRecycled.text.text = model.originalImageID;
-			var pathColor = Path.Combine("Color", model.originalImageID);
-			var pathBW = Path.Combine("BW", model.backgroundImageID);
+			newOrRecycled.menuItemUniversal.DisableLayouts();
+			newOrRecycled.menuItemUniversal.Item.SetActive(true);
+			var pathColor = Path.Combine("Color", model.puzzleSource.originalImageID);
+			var pathBW = Path.Combine("BW", model.puzzleSource.backgroundImageID);
 			//Debug.Log(pathColor);
 			Sprite colorSprite = Resources.Load<Sprite>(pathColor);
 			Sprite bwSprite = Resources.Load<Sprite>(pathBW);
 			//newOrRecycled.icon.sprite = colorSprite;
-			newOrRecycled.backgroundIcon.sprite = bwSprite;
-			newOrRecycled.pattenIcon.sprite = patternsSprites[model.pattrenIcon];
-			newOrRecycled.pattenIcon.SetNativeSize();
+			newOrRecycled.menuItemUniversal.backgroundIcon.sprite = bwSprite;
+			newOrRecycled.menuItemUniversal.pattenIcon.sprite = patternsSprites[model.puzzleSource.pattrenIcon];
+			newOrRecycled.menuItemUniversal.pattenIcon.SetNativeSize();
 			//Debug.Log("Update");
-			var icon = newOrRecycled.pattenIcon.transform.GetChild(0);
+			var icon = newOrRecycled.menuItemUniversal.pattenIcon.transform.GetChild(0);
 			icon.GetComponent<Image>().sprite = colorSprite;
 
 			var puzzleController = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
@@ -119,19 +150,19 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			{
 				foreach (var progress in progressList.puzzleStates)
 				{
-					if (model.originalImageID == progress.puzzleID)
+					if (model.puzzleSource.originalImageID == progress.puzzleID)
 					{
 						if (progress.progressCount / winCount == 1)
 						{
-							newOrRecycled.currentProgress.gameObject.SetActive(false);
-							newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = false;
+							newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(false);
+							newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = false;
 							break;
 						}
 						else
 						{
-							newOrRecycled.currentProgress.gameObject.SetActive(true);
-							newOrRecycled.pattenIcon.GetComponent<Mask>().enabled = true;
-							newOrRecycled.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =
+							newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(true);
+							newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = true;
+							newOrRecycled.menuItemUniversal.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =
 								(float) progress.progressCount / winCount;
 							break;
 						}
@@ -163,7 +194,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 		// The adapter needs to be notified of any change that occurs in the data list. 
 		// For GridAdapters, only Refresh and ResetItems work for now
 		#region data manipulation
-		public void AddItemsAt(int index, IList<PuzzleSource> items)
+		public void AddItemsAt(int index, IList<MyGridItemModel> items)
 		{
 			//Commented: this only works with Lists. ATM, Insert for Grids only works by manually changing the list and calling NotifyListChangedExternally() after
 			//Data.InsertItems(index, items);
@@ -179,7 +210,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			Data.NotifyListChangedExternally();
 		}
 
-		public void SetItems(IList<PuzzleSource> items)
+		public void SetItems(IList<MyGridItemModel> items)
 		{
 			Data.ResetItems(items);
 		}
@@ -199,26 +230,27 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// Simulating data retrieving delay
 			yield return new WaitForSeconds(.5f);
 			
-			var newItems = new PuzzleSource[count];
+			var newItems = new MyGridItemModel[count];
 
 			// Retrieve your data here
 			
 			for (int i = 0; i < count; ++i)
 			{
 				var model = Data[i];
-				{
-					model.originalImageID = Data[i].originalImageID;
-					model.backgroundImageID = Data[i].backgroundImageID;
-				}
-			
+				/*
+				model.puzzleSource.originalImageID = Data[i].puzzleSource.originalImageID;
+				model.puzzleSource.backgroundImageID = Data[i].puzzleSource.backgroundImageID;
+				*/
+					
+				//TODO: сделайть ifы
 				newItems[i] = model;
 			}
 			
 
-			OnDataRetrieved(newItems);//здесь пустой список     теперь не пустой
+			OnDataRetrieved(newItems);
 		}
 
-		void OnDataRetrieved(PuzzleSource[] newItems)//добавляет итемы в контент
+		void OnDataRetrieved(MyGridItemModel[] newItems)//добавляет итемы в контент
 		{
 			//Commented: this only works with Lists. ATM, Insert for Grids only works by manually changing the list and calling NotifyListChangedExternally() after
 			// Data.InsertItemsAtEnd(newItems);
@@ -234,11 +266,25 @@ namespace Your.Namespace.Here20May12044942767.Grids
 	}
 
 
+	public enum PuzzleItemType
+	{
+		TITLE,
+		ITEM,
+		NONE,
+		LAST
+	}
+	
 	// Class containing the data associated with an item
 	public class MyGridItemModel
 	{
-		public Image icon;
-		public Image backIcon;
+		public PuzzleItemType Type;
+		public PuzzleSource puzzleSource;
+
+		public MyGridItemModel(PuzzleItemType type, PuzzleSource puzzleSource)
+		{
+			Type = type;
+			this.puzzleSource = puzzleSource;
+		}
 	}
 
 
@@ -248,10 +294,12 @@ namespace Your.Namespace.Here20May12044942767.Grids
 	// UI elements. A cell's root is never disabled - when a cell is removed, only its "views" GameObject will be disabled
 	public class MyGridItemViewsHolder : CellViewsHolder
 	{
+
+		public MenuItemUniversal menuItemUniversal;
 		
-		public Image backgroundIcon;
+		/*public Image backgroundIcon;
 		public Image pattenIcon;
-		public Image currentProgress;
+		public Image currentProgress;*/
 
 		// Retrieving the views from the item's root GameObject
 		public override void CollectViews()
@@ -260,9 +308,12 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			// GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
 			// which infers the variable's component from its type, so you won't need to specify it yourself
 			
-			views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
+			/*views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
 			views.GetComponentAtPath("PatternIcon", out pattenIcon);
-			views.GetComponentAtPath("BackgroundProgressbar", out currentProgress);
+			views.GetComponentAtPath("BackgroundProgressbar", out currentProgress);*/
+			views.GetComponentAtPath("Views", out menuItemUniversal);
+			Debug.Log("MENU NULL " + menuItemUniversal == null);
+			
 			
 		}
 		

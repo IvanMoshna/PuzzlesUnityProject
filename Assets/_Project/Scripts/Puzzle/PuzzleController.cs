@@ -34,7 +34,7 @@ public class PuzzleController : MonoBehaviour
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public Canvas canvas;
-    public BasicGridAdapter osa;
+    public MainMenuListAdapter osa;
 
     [Space] 
     public int wCell;
