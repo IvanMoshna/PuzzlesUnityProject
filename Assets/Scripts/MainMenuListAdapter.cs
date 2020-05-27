@@ -59,6 +59,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			Data = new SimpleDataHelper<MyGridItemModel>(this);
 			
 			List<MyGridItemModel> myModelList = new List<MyGridItemModel>();
+			
 			myModelList.Add(new MyGridItemModel(PuzzleItemType.TITLE, null));
 			myModelList.Add(new MyGridItemModel(PuzzleItemType.NONE, null));
 
@@ -87,7 +88,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 
 			// Retrieve the models from your data source and set the items count
 
-			RetrieveDataAndUpdate(Data.Count);
+			//RetrieveDataAndUpdate(Data.Count);
 		}
 
 		private void OnEnable()
@@ -218,6 +219,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 
 
 		// Here, we're requesting <count> items from the data source  Здесь мы запрашиваем <count> элементы из источника данных
+		/*
 		public void RetrieveDataAndUpdate(int count)
 		{
 			StartCoroutine(FetchMoreItemsFromDataSourceAndUpdate(count));
@@ -240,7 +242,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 				/*
 				model.puzzleSource.originalImageID = Data[i].puzzleSource.originalImageID;
 				model.puzzleSource.backgroundImageID = Data[i].puzzleSource.backgroundImageID;
-				*/
+				#1#
 					
 				//TODO: сделайть ifы
 				newItems[i] = model;
@@ -249,6 +251,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 
 			OnDataRetrieved(newItems);
 		}
+		*/
 
 		void OnDataRetrieved(MyGridItemModel[] newItems)//добавляет итемы в контент
 		{
@@ -311,8 +314,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			/*views.GetComponentAtPath("BackgroundIcon", out backgroundIcon);
 			views.GetComponentAtPath("PatternIcon", out pattenIcon);
 			views.GetComponentAtPath("BackgroundProgressbar", out currentProgress);*/
-			views.GetComponentAtPath("Views", out menuItemUniversal);
-			Debug.Log("MENU NULL " + menuItemUniversal == null);
+			views.GetComponentAtPath("", out menuItemUniversal);
 			
 			
 		}
