@@ -11,7 +11,7 @@ public class PuzzleShadow : MonoBehaviour
    public List<Vector2> shadowPositions;
    public List<Vector2> shadowElementPositions;
 
-   private void Start()
+   /*private void Start()
    {
       int x = 0;
       Vector2 possiblePos;
@@ -29,5 +29,5 @@ public class PuzzleShadow : MonoBehaviour
 
          x += puzzleController.hCell;
       }
-   }
+   }*/
 }

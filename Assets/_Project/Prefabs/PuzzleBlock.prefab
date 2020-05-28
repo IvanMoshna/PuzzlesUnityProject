@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2858518724337701548
 RectTransform:
   m_ObjectHideFlags: 0
@@ -89,6 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzleController: {fileID: 0}
   shadowPositions: []
+  shadowElementPositions: []
 --- !u!1 &2992117476193651827
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,8 +301,15 @@ MonoBehaviour:
   puzzleController: {fileID: 0}
   ScrollParent: {fileID: 0}
   imageManager: {fileID: 0}
-  puzzlePosition: {x: 0, y: 0}
   puzzleImage: {fileID: 0}
   backgroundImage: {fileID: 6512544545907323363}
-  gridImage: {fileID: 127402173411310003}
+  puzzleData:
+    puzzleData: []
+    puzzlePosition:
+      x: 0
+      y: 0
+    isPosed: 0
   scrollRect: {fileID: 0}
+  canvas: {fileID: 0}
+  elementPositions: []
+  progressItemCount: 0

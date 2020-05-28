@@ -44,7 +44,7 @@ public class PuzzleController : MonoBehaviour
     
     public List<Vector2> posedPositions;
     public List<GameObject> shadowsList;
-    public List<GameObject> allPuzzlesList;
+    public List<GameObject> allTransparentPuzzlesList;
 
     [Space] 
     public Content content;
@@ -79,7 +79,7 @@ public class PuzzleController : MonoBehaviour
             }
         }
         currentState = null;
-        allPuzzlesList.Clear();
+        allTransparentPuzzlesList.Clear();
     }
 
     public void InitView(List<PuzzleData> puzzle) //нарезка текстуры
@@ -148,12 +148,12 @@ public class PuzzleController : MonoBehaviour
             gridTex.Apply();
 
 
-            var shadowElPos = puzzleBlock.gridImage.GetComponent<PuzzleShadow>().shadowElementPositions;
+            //var shadowElPos = puzzleBlock.gridImage.GetComponent<PuzzleShadow>().shadowElementPositions;
             foreach (var eP in block.puzzleData)
             {
                 Vector2 elementPosition = new Vector2(eP.x, eP.y);
                 puzzleBlock.elementPositions.Add(elementPosition);
-                shadowElPos.Add(new Vector2(elementPosition.x*128, elementPosition.y*128));
+                //shadowElPos.Add(new Vector2(elementPosition.x*128, elementPosition.y*128));
                 var pixels = mainTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
                     h_cell, w_cell);
                 var backgroundPixels = backgroundTexture.GetPixels((int) elementPosition.x * w_cell, (int) elementPosition.y * h_cell,
@@ -178,7 +178,7 @@ public class PuzzleController : MonoBehaviour
             newPuzzle.GetComponent<Image>().sprite = sprite;
             
             if(gameSettings.isTransparency)
-                newPuzzle.GetComponent<Image>().color = new Color(1,1,1,startTransparency);//сетаем начальную прозрачность пазла
+                newPuzzle.GetComponent<Image>().color = new Color(1,1,1,1);
             
             newPuzzle.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
 
@@ -192,28 +192,29 @@ public class PuzzleController : MonoBehaviour
             puzzleItem.canvas = this.canvas;
             puzzleItem.progressItemCount = puzzleItem.elementPositions.Count; 
             
-            var puzzleItemGridImage = puzzleItem.gridImage;
+            /*var puzzleItemGridImage = puzzleItem.gridImage;
             shadowsList.Add(puzzleItemGridImage);
             puzzleItemGridImage.GetComponent<Image>().sprite = gridSprite;
             puzzleItemGridImage.GetComponent<Image>().color = new Color(1,1,1,gameSettings.transparency);
             puzzleItemGridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-            puzzleItemGridImage.GetComponent<PuzzleShadow>().puzzleController = this;
+            puzzleItemGridImage.GetComponent<PuzzleShadow>().puzzleController = this;*/
             
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
 
             shuffledList.Add(blockParent);
+            
         }
         
         if(gameSettings.isShuffled)
             shuffledList.Shuffle();
         foreach (var item in shuffledList)
         {
-            allPuzzlesList.Add(item.GetComponent<PuzzleItem>().puzzleImage);
-            var rtItem = item.GetComponent<RectTransform>();
+            
             if (item.GetComponent<PuzzleItem>().puzzleData.isPosed)
             {
                 item.transform.SetParent(DragParent);
+                allTransparentPuzzlesList.Add(item.GetComponent<PuzzleItem>().puzzleImage);
             }
             else
             {
@@ -227,7 +228,8 @@ public class PuzzleController : MonoBehaviour
 
     public void SetAlphaToPuzzles(int progress, int winProgress)
     {
-        foreach (var item in allPuzzlesList)
+        //Debug.Log("SetAlpha");
+        foreach (var item in allTransparentPuzzlesList)
         {
             float ratio =(float) ((double)progress/(double)winProgress);
             float itemAlpha = 0.5f + ratio*0.5f;

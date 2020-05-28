@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class UIController : MonoBehaviour
 {
 
     public GameObject GameScreen;
     public GameObject MenuScreen;
     public GameObject ContinueScreen;
-
+    public GameObject LoadingScreen;
 
     private void DisableAll()
     {
         ContinueScreen.SetActive(false);
         GameScreen.SetActive(false);
         MenuScreen.SetActive(false);
+        LoadingScreen.SetActive(false);
     }
     private void Awake()
     {
@@ -26,9 +28,22 @@ public class UIController : MonoBehaviour
 
     public void GoToGameScreen()
     {
-        DisableAll();
-        GameScreen.SetActive(true);
+        OnLoadingScreen();
     }
+
+    public void OnLoadingScreen()
+    {
+        DisableAll();
+        LoadingScreen.SetActive(true);
+        StartCoroutine(StartTimer(1f));
+    }
+    IEnumerator StartTimer(float time)
+    {
+        GameScreen.SetActive(true);
+        yield return new WaitForSeconds(time);
+        LoadingScreen.SetActive(false);
+    }
+    
     public void OnContinueScreen()
     {
         ContinueScreen.SetActive(true);
