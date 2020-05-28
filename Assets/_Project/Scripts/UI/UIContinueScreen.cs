@@ -45,6 +45,7 @@ public class UIContinueScreen : MonoBehaviour
         controller.UIController.GetComponent<UIController>().GoToGameScreen();
         controller.InitView(controller.currentState.puzzleDatas);
         controller.UpdateProgress();
-
+        if (controller.currentState.isCollected)
+            GameObject.Find("GameScreen").GetComponent<UIGameScreen>().SetGamePanelsWinPositions();
     }
 }

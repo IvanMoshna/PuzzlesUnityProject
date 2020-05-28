@@ -22,15 +22,20 @@ public class UIGameScreen : MonoBehaviour
     
     public void SetGamePanelsWinPositions()
     {
-        //var topPos = topPanel.GetComponent<RectTransform>().sizeDelta.y;
-        //Debug.Log("TopPos = " + topPos);
         topPanel.transform.DOMove(topWinPosition.transform.position, duration);
         var lowPos = lowerPanel.GetComponent<RectTransform>().sizeDelta.y;
         lowerPanel.transform.DOMoveY( -lowPos, duration);
         winPanel.transform.DOMoveY(0, duration);
     }
 
-    public void RestarOnGameScreen()
+    public void SetGamePanelsGamePositions()
+    {
+        topPanel.transform.DOMove(topGamePosition.transform.position, duration);
+        lowerPanel.transform.DOMoveY(0, duration);
+        winPanel.transform.DOMoveY(-200, duration);   
+    }
+
+    public void RestartOnGameScreen()
     {
         
         var gameSettings = ToolBox.Get<SettingsGame>();
@@ -56,9 +61,7 @@ public class UIGameScreen : MonoBehaviour
         controller.InitView(puzState.puzzleDatas);
         controller.UpdateProgress();
         
-        topPanel.transform.DOMove(topGamePosition.transform.position, duration);
-        lowerPanel.transform.DOMoveY(0, duration);
-        winPanel.transform.DOMoveY(-200, duration);
+        SetGamePanelsGamePositions();
     }
 
 }

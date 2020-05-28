@@ -13,7 +13,7 @@ public class ImageManager : MonoBehaviour
     {
         foreach (var item in backgroundPanels)
         {
-            item.GetComponent<Image>().color = new Color(0.9f, 0.9f, 0.9f, 1);
+            item.GetComponent<Image>().color = new Color(0.7f, 0.7f, 0.7f, 1);
         }
     }
 

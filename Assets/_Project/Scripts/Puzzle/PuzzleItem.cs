@@ -149,6 +149,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             {
                 var gameScreen = GameObject.Find("GameScreen").GetComponent<UIGameScreen>();
                 gameScreen.SetGamePanelsWinPositions();
+                puzzleController.currentState.isCollected = true;
                 Debug.Log("U WIN!!!!");
             }
             //TODO: ПОФИКСИТЬ ВОЗМОЖНЫЕ ПОЗИЦИИ ТЕНЕЙ, КОГДА ДРУГОЙ ПАЗЛ УЖЕ ПОСТАВЛЕН
