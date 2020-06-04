@@ -192,12 +192,12 @@ public class PuzzleController : MonoBehaviour
             puzzleItem.canvas = this.canvas;
             puzzleItem.progressItemCount = puzzleItem.elementPositions.Count; 
             
-            /*var puzzleItemGridImage = puzzleItem.gridImage;
+            var puzzleItemGridImage = puzzleItem.gridImage;
             shadowsList.Add(puzzleItemGridImage);
             puzzleItemGridImage.GetComponent<Image>().sprite = gridSprite;
             puzzleItemGridImage.GetComponent<Image>().color = new Color(1,1,1,gameSettings.transparency);
             puzzleItemGridImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
-            puzzleItemGridImage.GetComponent<PuzzleShadow>().puzzleController = this;*/
+            puzzleItemGridImage.GetComponent<PuzzleShadow>().puzzleController = this;
             
             blockParent.GetComponent<RectTransform>().sizeDelta =
                 new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
@@ -335,10 +335,9 @@ public class PuzzleController : MonoBehaviour
 
     public void UpdateProgress()
     {
-        Debug.Log("Update Progress");
+        //Debug.Log("Update Progress");
         progressCount = InitProgress(currentState);
         currentState.progressCount = progressCount;
-        //SetAlphaToPuzzles(progressCount, winCount);
     }
     
     private void InitGameState()

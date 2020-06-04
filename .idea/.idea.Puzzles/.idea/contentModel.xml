@@ -42,6 +42,7 @@
             <e p="ShapeGenerator.cs" t="Include" />
             <e p="UI" t="Include">
               <e p="MenuItemUniversal.cs" t="Include" />
+              <e p="ScaleFactorCalculator.cs" t="Include" />
               <e p="UIContinueScreen.cs" t="Include" />
               <e p="UIController.cs" t="Include" />
               <e p="UIGameScreen.cs" t="Include" />

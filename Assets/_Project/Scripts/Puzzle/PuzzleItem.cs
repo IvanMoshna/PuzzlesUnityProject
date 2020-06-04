@@ -18,7 +18,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     //public Vector2 puzzlePosition;
     public GameObject puzzleImage;
     public GameObject backgroundImage;
-    //public GameObject gridImage;
+    public GameObject gridImage;
 
     public PuzzleData puzzleData;
     
@@ -66,7 +66,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
-            //gridImage.SetActive(false);
+            gridImage.SetActive(false);
             
             RepeatPattern(imageManager.backgroundPanels, rtPuzzleImage.gameObject);
 
@@ -105,7 +105,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         isDraggable = true;
         isFramed = true;
         //transform.SetParent(puzzleController.DragParent, true);
-        //gridImage.transform.SetParent(puzzleController.DragParent, true);
+        gridImage.transform.SetParent(puzzleController.DragParent, true);
         puzzleImage.transform.SetParent(puzzleController.DragParent, true);
         /*rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;*/
@@ -121,13 +121,14 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         
         Vector2 puzDataPos = new Vector2(puzzleData.puzzlePosition.x, puzzleData.puzzlePosition.y);
         
-        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzDataPos) < settingsGame.puzzleDistance)
+        if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzDataPos) < settingsGame.puzzleDistance && rtPuzzleImage.parent == puzzleController.DragParent)
         {
+            Debug.Log("Distance = " + Vector2.Distance(rtPuzzleImage.anchoredPosition, puzDataPos));
             puzzleImage.transform.localPosition = puzDataPos;
             rtPuzzleImage.anchoredPosition = puzDataPos;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
-            //gridImage.SetActive(false);
+            gridImage.SetActive(false);
             puzzleImage.transform.SetParent(this.transform,true);
             transform.SetParent(puzzleController.DragParent, true);
             
@@ -198,18 +199,15 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
                         shadowElPos.RemoveAt(k);
                     }
                 }
-                
-                
             }*/
         }
         else
         {
-            //gridImage.transform.SetParent(this.transform,true);
+            gridImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.localPosition = Vector3.zero;
-            //gridImage.transform.localPosition = Vector3.zero;
+            gridImage.transform.localPosition = Vector3.zero;
         }
-
         puzzleController.SetPreferedContentSize();
     }
 
@@ -246,9 +244,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         else
         {
             puzzleImage.transform.position = eventData.position-offsetToCenter;
-                
-                
-            //SetPuzzlePosOnGridImage(rtPuzzleImage.anchoredPosition, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
+            SetPuzzlePosOnGridImage(rtPuzzleImage.anchoredPosition, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
 
             if (isFramed)
             {
@@ -279,7 +275,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
             nearestPos = Vector2.Distance(puzzle, pos);
             gridImage.GetComponent<RectTransform>().anchoredPosition = pos;
         }
-        
     }
 
     public void OnEndDrag(PointerEventData eventData)

@@ -151,26 +151,30 @@ namespace Your.Namespace.Here20May12044942767.Grids
 			var puzzleController = GameObject.Find("Puzzle").GetComponent<PuzzleController>();
 			var progressList = puzzleController.DataPuzzleState;
 			var winCount = puzzleController.winCount;
+			
+			newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(true);
+			newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = true;
+			newOrRecycled.menuItemUniversal.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =0;
 			if (progressList != null)
 			{
 				foreach (var progress in progressList.puzzleStates)
 				{
+					if (model.puzzleSource.originalImageID == progress.puzzleID && progress.isCollected)
+					{
+						Debug.Log("IS Collected");
+						newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(false);
+						newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = false;
+						break;
+					}
+
 					if (model.puzzleSource.originalImageID == progress.puzzleID)
 					{
-						if (progress.progressCount / winCount == 1)
-						{
-							newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(false);
-							newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = false;
-							break;
-						}
-						else
-						{
-							newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(true);
-							newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = true;
-							newOrRecycled.menuItemUniversal.currentProgress.transform.GetChild(0).GetComponent<Image>().fillAmount =
-								(float) progress.progressCount / winCount;
-							break;
-						}
+						newOrRecycled.menuItemUniversal.currentProgress.gameObject.SetActive(true);
+						newOrRecycled.menuItemUniversal.pattenIcon.GetComponent<Mask>().enabled = true;
+						newOrRecycled.menuItemUniversal.currentProgress.transform.GetChild(0).GetComponent<Image>()
+								.fillAmount =
+							(float) progress.progressCount / winCount;
+						break;
 					}
 				}
 			}
