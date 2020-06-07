@@ -19,10 +19,12 @@ public class PuzzleController : MonoBehaviour
     public Image backgroundImage;
     public Image gridImage;
     public Transform DragParent;
+    public Transform SpritesParent;
 
     [Space]
     public GameObject puzzlePrefab;
     public GameObject PuzzleElementPrefab;
+    public GameObject spriteElementPrefab;
     
     [Space]
     public ImageManager imageManager;
@@ -88,6 +90,7 @@ public class PuzzleController : MonoBehaviour
         Texture2D mainTexture = originalImage.mainTexture as Texture2D;
         Texture2D backgroundTexture = backgroundImage.mainTexture as Texture2D;
         Texture2D gridTexture = gridImage.mainTexture as Texture2D;
+        
         /*var gridPixels = gridTexture.GetPixels();
         for (int i = 0; i < gridPixels.Length; i++)
         {
@@ -168,15 +171,21 @@ public class PuzzleController : MonoBehaviour
             backgroundTex.Apply();
             gridTex.Apply();
             
-            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
-            Sprite bgSprite = Sprite.Create(backgroundTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0f, 0f));
+            //Sprite bgSprite = Sprite.Create(backgroundTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
             Sprite gridSprite = Sprite.Create(gridTex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f));
 
             GameObject newPuzzle = Instantiate(PuzzleElementPrefab, blockParent.transform);
             puzzleBlock.puzzleImage = newPuzzle;
-            //this.NextFrame(()=>newPuzzle.transform.localScale=Vector3.one);
             newPuzzle.GetComponent<Image>().sprite = sprite;
-            
+            //newPuzzle.GetComponent<SpriteRenderer>().sprite = sprite;
+            //newPuzzle.transform.SetParent(SpritesParent);
+
+            GameObject spriteRenderer = Instantiate(spriteElementPrefab, blockParent.transform);
+            puzzleBlock.spriteImage = spriteRenderer;
+            spriteRenderer.GetComponent<SpriteRenderer>().sprite = sprite;
+
+
             if(gameSettings.isTransparency)
                 newPuzzle.GetComponent<Image>().color = new Color(1,1,1,1);
             
@@ -187,10 +196,11 @@ public class PuzzleController : MonoBehaviour
             puzzleBlock.puzzleData.puzzlePosition = new SerializablePosition(minX * w_cell, minY * h_cell);
 
             var puzzleItem = puzzleBlock.GetComponent<PuzzleItem>();
-            puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
+            //puzzleItem.backgroundImage.GetComponent<Image>().sprite = bgSprite;
             puzzleItem.backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             puzzleItem.canvas = this.canvas;
-            puzzleItem.progressItemCount = puzzleItem.elementPositions.Count; 
+            puzzleItem.progressItemCount = puzzleItem.elementPositions.Count;
+            //puzzleItem.spriteImage.sprite = sprite;
             
             var puzzleItemGridImage = puzzleItem.gridImage;
             shadowsList.Add(puzzleItemGridImage);
@@ -218,7 +228,7 @@ public class PuzzleController : MonoBehaviour
             }
             else
             {
-                item.transform.SetParent(scrollViewContent.transform);
+                item.transform.SetParent(scrollViewContent.transform, false);
             }
         }
         

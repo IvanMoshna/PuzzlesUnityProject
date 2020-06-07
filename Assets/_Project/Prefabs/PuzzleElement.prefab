@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6772198408535593152}
   - component: {fileID: 583907974047465034}
-  - component: {fileID: 8330070720893635292}
+  - component: {fileID: -1550779465356397687}
   m_Layer: 5
   m_Name: PuzzleElement
   m_TagString: Untagged
@@ -45,7 +45,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3848191655278999467}
   m_CullTransparentMesh: 1
---- !u!114 &8330070720893635292
+--- !u!114 &-1550779465356397687
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,9 +65,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
