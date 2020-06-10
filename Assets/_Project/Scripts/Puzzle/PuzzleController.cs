@@ -20,6 +20,7 @@ public class PuzzleController : MonoBehaviour
     public Image gridImage;
     public Transform DragParent;
     public Transform SpritesParent;
+    public Transform IntermediateParent;
 
     [Space]
     public GameObject puzzlePrefab;
