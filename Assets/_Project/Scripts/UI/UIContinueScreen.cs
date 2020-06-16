@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Common;
 using Puzzles.Configs;
@@ -47,5 +48,12 @@ public class UIContinueScreen : MonoBehaviour
         controller.UpdateProgress();
         if (controller.currentState.isCollected)
             GameObject.Find("GameScreen").GetComponent<UIGameScreen>().SetGamePanelsWinPositions();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            gameObject.SetActive(false);
+           
     }
 }

@@ -17,21 +17,25 @@ public class UIGameScreen : MonoBehaviour
     public float duration;
     public GameObject topWinPosition;
     public GameObject topGamePosition;
+    public GameObject lowPosition;
+    public GameObject lowHiddenPosition;
 
+    public UIController UIcontroller;
     private PuzzleController controller;
     
     public void SetGamePanelsWinPositions()
     {
         topPanel.transform.DOMove(topWinPosition.transform.position, duration);
-        var lowPos = lowerPanel.GetComponent<RectTransform>().sizeDelta.y;
-        lowerPanel.transform.DOMoveY( -lowPos, duration);
-        winPanel.transform.DOMoveY(0, duration);
+        //var lowPos = lowerPanel.GetComponent<RectTransform>().sizeDelta.y;
+        lowerPanel.transform.DOMove(lowHiddenPosition.transform.position, duration);
+        winPanel.transform.DOMove(lowPosition.transform.position, duration);
+        Debug.Log("Win panel pos = " + winPanel.transform.position.y);
     }
 
     public void SetGamePanelsGamePositions()
     {
         topPanel.transform.DOMove(topGamePosition.transform.position, duration);
-        lowerPanel.transform.DOMoveY(0, duration);
+        lowerPanel.transform.DOMove(lowPosition.transform.position, duration);
         winPanel.transform.DOMoveY(-200, duration);   
     }
 
@@ -64,4 +68,9 @@ public class UIGameScreen : MonoBehaviour
         SetGamePanelsGamePositions();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            UIcontroller.GoToMenuScreen();
+    }
 }

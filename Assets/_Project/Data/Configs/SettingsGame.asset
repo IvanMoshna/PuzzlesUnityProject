@@ -18,7 +18,7 @@ MonoBehaviour:
   transparency: 0.3
   DragDelay: 0.1
   DragDelta: 10
-  isShuffled: 0
+  isShuffled: 1
   isTransparency: 1
   IsSaveGame: 1
   PathSaves: /saves

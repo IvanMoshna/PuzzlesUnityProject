@@ -19,9 +19,7 @@ public class PuzzleController : MonoBehaviour
     public Image backgroundImage;
     public Image gridImage;
     public Transform DragParent;
-    public Transform SpritesParent;
-    public Transform IntermediateParent;
-
+   
     [Space]
     public GameObject puzzlePrefab;
     public GameObject PuzzleElementPrefab;
@@ -29,7 +27,6 @@ public class PuzzleController : MonoBehaviour
     
     [Space]
     public ImageManager imageManager;
-
     public GameObject UIController;
     
     [Space]
@@ -132,6 +129,7 @@ public class PuzzleController : MonoBehaviour
 
 
             Texture2D tex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
+            tex.filterMode = FilterMode.Point;
             Texture2D backgroundTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
             Texture2D gridTex = new Texture2D((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell, TextureFormat.ARGB32, false);
             
@@ -179,13 +177,6 @@ public class PuzzleController : MonoBehaviour
             GameObject newPuzzle = Instantiate(PuzzleElementPrefab, blockParent.transform);
             puzzleBlock.puzzleImage = newPuzzle;
             newPuzzle.GetComponent<Image>().sprite = sprite;
-            //newPuzzle.GetComponent<SpriteRenderer>().sprite = sprite;
-            //newPuzzle.transform.SetParent(SpritesParent);
-
-            GameObject spriteRenderer = Instantiate(spriteElementPrefab, blockParent.transform);
-            puzzleBlock.spriteImage = spriteRenderer;
-            spriteRenderer.GetComponent<SpriteRenderer>().sprite = sprite;
-
 
             if(gameSettings.isTransparency)
                 newPuzzle.GetComponent<Image>().color = new Color(1,1,1,1);
@@ -201,7 +192,7 @@ public class PuzzleController : MonoBehaviour
             puzzleItem.backgroundImage.GetComponent<RectTransform>().sizeDelta = new Vector2((maxX - minX + 1) * w_cell, (maxY - minY + 1) * h_cell);
             puzzleItem.canvas = this.canvas;
             puzzleItem.progressItemCount = puzzleItem.elementPositions.Count;
-            //puzzleItem.spriteImage.sprite = sprite;
+            puzzleItem.puzzleImage.GetComponent<Image>().useSpriteMesh = true;
             
             var puzzleItemGridImage = puzzleItem.gridImage;
             shadowsList.Add(puzzleItemGridImage);

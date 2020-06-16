@@ -19,7 +19,6 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     public GameObject puzzleImage;
     public GameObject backgroundImage;
     public GameObject gridImage;
-    public GameObject spriteImage;
 
     public PuzzleData puzzleData;
     
@@ -112,10 +111,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         //transform.SetParent(puzzleController.DragParent, true);
         gridImage.transform.SetParent(puzzleController.DragParent, true);
         puzzleImage.transform.SetParent(puzzleController.DragParent, true);
-        Debug.Log("ANCHORED: " + rtPuzzleImage.anchoredPosition);
-        spriteImage.transform.SetParent(puzzleController.SpritesParent, false);
-        /*rt.anchorMax = Vector2.zero;
-        rt.anchorMin = Vector2.zero;*/
+
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -131,60 +127,15 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         
         if (Vector2.Distance(rtPuzzleImage.anchoredPosition, puzDataPos) < settingsGame.puzzleDistance && rtPuzzleImage.parent == puzzleController.DragParent)
         {
-            Debug.Log("ДО");
-            Debug.Log("PUZZLE IMAGE: " + puzzleImage.transform.position);
-            Debug.Log("SPRITE IMAGE: " + spriteImage.transform.position);
-            
-            //Debug.Log("Distance = " + Vector2.Distance(rtPuzzleImage.anchoredPosition, puzDataPos));
-            puzzleImage.transform.localPosition = puzDataPos;
-            //spriteImage.transform.position = new Vector3(puzzleImage.transform.localPosition.x, puzzleImage.transform.localPosition.y, 1);
-            Debug.Log("после дата поз");
-
-            Debug.Log("PUZZLE IMAGE: " + puzzleImage.transform.position);
-            Debug.Log("SPRITE IMAGE: " + spriteImage.transform.position);
-            //spriteImage.transform.position = Camera.main.ScreenToWorldPoint(rtPuzzleImage.anchoredPosition);
-           
-            spriteImage.transform.position = puzzleImage.transform.position;
-            
-            /*puzzleImage.transform.SetParent(puzzleController.IntermediateParent, true);
-            spriteImage.transform.position = Camera.main.ScreenToWorldPoint(puzzleImage.transform.position);*/
-            
-            
-            
-            /*Vector3[] v = new Vector3[4];
-            rtPuzzleImage.GetWorldCorners(v);
-
-            v[0].y -= Camera.main.orthographicSize/2;
-            v[0].x -= Camera.main.aspect * Camera.main.orthographicSize;
-            spriteImage.transform.position = v[0];
-         
-            Debug.Log("ANCHORED: " + v[0]);*/
-            Debug.Log("после всей хуйни");
-
-            Debug.Log("PUZZLE IMAGE: " + puzzleImage.transform.position);
-            Debug.Log("SPRITE IMAGE: " + spriteImage.transform.position);
-            /*Debug.Log("IMAGE");
-            Debug.Log("Anchor = "+ puzzleImage.GetComponent<RectTransform>().anchoredPosition);
-            Debug.Log("Local = "+ puzzleImage.GetComponent<RectTransform>().localPosition);
-            Debug.Log("Position = "+ puzzleImage.GetComponent<RectTransform>().position);
-            Debug.Log("SPRITE");
-            //Debug.Log("Anchor = "+ spriteImage.GetComponent<RectTransform>().anchoredPosition);
-            Debug.Log("Local = "+ spriteImage.transform.localPosition);
-            Debug.Log("Position = "+ spriteImage.transform.position);
-            
-            Debug.Log("Camera Pos" + Camera.main.ScreenToWorldPoint(puzDataPos));*/
-
-            
             rtPuzzleImage.anchoredPosition = puzDataPos;
             puzzleImage.GetComponent<Image>().raycastTarget = false;
             backgroundImage.SetActive(false);
             gridImage.SetActive(false);
             
        
-            //puzzleImage.transform.SetParent(this.transform,true);
-            //transform.SetParent(puzzleController.DragParent, true);
-            //spriteImage.transform.SetParent(puzzleController.DragParent, false);
-            puzzleImage.SetActive(false);
+            puzzleImage.transform.SetParent(this.transform,true);
+            transform.SetParent(puzzleController.DragParent, true);
+            puzzleImage.SetActive(true);
 
             RepeatPattern(imageManager.backgroundPanels, gameObject);
             
@@ -258,11 +209,9 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         {
             gridImage.transform.SetParent(this.transform,true);
             puzzleImage.transform.SetParent(this.transform,true);
-            spriteImage.transform.SetParent(this.transform, false);
             puzzleImage.transform.localPosition = Vector3.zero;
             gridImage.transform.localPosition = Vector3.zero;
             puzzleImage.GetComponent<Image>().enabled = true;
-                //spriteImage.SetActive(false);
         }
         puzzleController.SetPreferedContentSize();
     }
@@ -299,14 +248,11 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         }
         else
         {
-            //puzzleImage.transform.position = eventData.position-offsetToCenter;
+            puzzleImage.transform.position = eventData.position-offsetToCenter;
             Vector3 pos = new Vector3(eventData.position.x, eventData.position.y, 1);
             
             puzzleImage.transform.position = Camera.main.ScreenToWorldPoint(pos);
-            puzzleImage.GetComponent<Image>().enabled = false;
-            spriteImage.SetActive(true);
-            spriteImage.transform.position = puzzleImage.transform.position;
-            
+
             SetPuzzlePosOnGridImage(rtPuzzleImage.anchoredPosition, gridImage, gridImage.GetComponent<PuzzleShadow>().shadowPositions);
 
             if (isFramed)

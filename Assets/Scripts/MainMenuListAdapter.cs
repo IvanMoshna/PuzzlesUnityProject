@@ -71,7 +71,7 @@ namespace Your.Namespace.Here20May12044942767.Grids
 				myModelList.Add(new MyGridItemModel(PuzzleItemType.ITEM, puzzleSource));
 			}
 			
-			myModelList.Add(new MyGridItemModel(PuzzleItemType.NONE, null));
+			//myModelList.Add(new MyGridItemModel(PuzzleItemType.NONE, null));
 			myModelList.Add(new MyGridItemModel(PuzzleItemType.LAST, null));
 
 			Data.InsertItemsAtStart(myModelList);
