@@ -279,7 +279,7 @@ public class PuzzleItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
                 {
                     elementPositions.Remove(p);
                     isPosed = true;
-                    Debug.Log("ХУЙ");
+
                 }
             }*/
             if (!(Vector2.Distance(puzzle, pos) < nearestPos)) continue;

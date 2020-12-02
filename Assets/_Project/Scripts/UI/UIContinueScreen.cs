@@ -50,10 +50,10 @@ public class UIContinueScreen : MonoBehaviour
             GameObject.Find("GameScreen").GetComponent<UIGameScreen>().SetGamePanelsWinPositions();
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
             gameObject.SetActive(false);
            
-    }
+    }*/
 }
